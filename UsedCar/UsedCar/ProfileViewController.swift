@@ -36,6 +36,18 @@ class ProfileViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        if Reachability.isConnectedToNetwork() != true {
+            
+            let alertController = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.Alert)
+            let goBackAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
+            }
+            alertController.addAction(goBackAction)
+            
+            presentViewController(alertController, animated: true, completion: nil)
+        }
+        
+        
+        
         mySellingFirebaseSearchInfo = []
         
         mySellingFirebaseSearchResultKey = []
@@ -276,7 +288,7 @@ class ProfileViewController: UIViewController {
                         
                         
                         if self.mySellingTableViewController.mySellingItemsTableView != nil {
-
+                            
                             self.mySellingTableViewController.mySellingItemsTableView.reloadData()
                             
                         }

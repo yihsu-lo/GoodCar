@@ -280,7 +280,6 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
                     
                 } else {
                     
-                    
                     self.firebaseSearchResultImageURLDictionary[item] = URL!
                     
                     if self.firebaseSearchResultKey.count == self.firebaseSearchResultImageURLDictionary.count && self.firebaseSearchResultKey.count != 0 {
