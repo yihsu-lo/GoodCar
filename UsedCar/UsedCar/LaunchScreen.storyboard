@@ -27,23 +27,32 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Good Car" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="GJd-Yh-RWb">
-                                <rect key="frame" x="220" y="278" width="160.5" height="43"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="transport-5" translatesAutoresizingMaskIntoConstraints="NO" id="HcI-ry-UQK">
+                                <rect key="frame" x="250" y="250" width="100" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="Q5X-aE-CzH"/>
+                                    <constraint firstAttribute="width" constant="100" id="yiZ-SQ-Bx8"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="GoodCar" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="GJd-Yh-RWb">
+                                <rect key="frame" x="220" y="180" width="160.5" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="6s4-5A-CLs"/>
                                     <constraint firstAttribute="width" constant="200" id="BKs-lt-zVa"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="36"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" red="0.70588235294117641" green="0.70588235294117641" blue="0.70588235294117641" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="8ZY-or-L3N"/>
-                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="9cc-Ye-pcL"/>
                             <constraint firstItem="obG-Y5-kRd" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Ha8-be-3RZ"/>
                             <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="obG-Y5-kRd" secondAttribute="bottom" constant="20" id="OxY-gj-cw7"/>
+                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="QNe-q6-1Bl"/>
+                            <constraint firstItem="HcI-ry-UQK" firstAttribute="top" secondItem="GJd-Yh-RWb" secondAttribute="bottom" constant="27" id="mP9-sL-InC"/>
+                            <constraint firstItem="HcI-ry-UQK" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="sJg-KT-IlI"/>
+                            <constraint firstItem="HcI-ry-UQK" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="ulM-1V-UIz"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -52,4 +61,7 @@
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="transport-5" width="512" height="512"/>
+    </resources>
 </document>

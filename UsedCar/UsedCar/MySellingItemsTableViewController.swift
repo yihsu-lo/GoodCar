@@ -26,6 +26,12 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
         mySellingItemsTableView.dataSource = self
         mySellingItemsTableView.delegate = self
         
+    }
+    
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
+        
         NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(1.5), target: self, selector: #selector(checkData), userInfo: nil, repeats: false)
     }
     

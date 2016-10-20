@@ -20,11 +20,15 @@ class LovedItemsTableViewController: UIViewController, UITableViewDataSource, UI
         
         lovedItemsTableView.dataSource = self
         lovedItemsTableView.delegate = self
-        
-        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(1.5), target: self, selector: #selector(checkData), userInfo: nil, repeats: false)
-        
+
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
+        
+        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(1.5), target: self, selector: #selector(checkData), userInfo: nil, repeats: false)
+    
+    }
     
     
     var firebaseLikesAutoID : [String] = []

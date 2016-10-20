@@ -342,6 +342,7 @@ class ProfileViewController: UIViewController {
         if FirebaseManager.shared.firebaseUserID != "" {
             likesRootRef.queryOrderedByChild("firebaseUserID").queryEqualToValue(FirebaseManager.shared.firebaseUserID).observeSingleEventOfType(.Value, withBlock: { snapshot in
                 
+                
                 if snapshot.exists() {
                     
                     for item in [snapshot.value] {
@@ -367,7 +368,7 @@ class ProfileViewController: UIViewController {
                     
                     self.lovedItemsTableViewController.firebaseLikesAutoID = self.likesFirebaseLikesAutoID
                     
-//                    self.lovedItemsTableViewController.lovedItemsTableView.reloadData()
+                    self.lovedItemsTableViewController.lovedItemsTableView.reloadData()
                     
                 }
             })
