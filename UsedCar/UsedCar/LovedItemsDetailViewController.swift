@@ -37,8 +37,8 @@ class LovedItemsDetailViewController: UIViewController {
     
     @IBOutlet weak var heartWhiteImageView: UIImageView!
     
-    
-    
+    @IBOutlet weak var lovedDetailContactOwnerButton: UIButton!
+
     
     var singleSearchKey : String = ""
     var singleSearchResult : [SearchDataViewController.FirebaseSearchResultData] = []
@@ -75,6 +75,13 @@ class LovedItemsDetailViewController: UIViewController {
         lovedDetailLocationValueLabel.text = singleSearchResult[0].location
         lovedDetailPriceValueLabel.text = String(singleSearchResult[0].price)
         lovedDetailTimeValueLabel.text = NSString(string: singleSearchResult[0].time).substringToIndex(16)
+        
+        
+        lovedDetailContactOwnerButton.backgroundColor = UIColor(red: 30/255, green: 130/255, blue: 150/255, alpha: 1)
+        
+        lovedDetailContactOwnerButton.layer.cornerRadius = 18
+        lovedDetailContactOwnerButton.tintColor = UIColor.whiteColor()
+        
         
         let color1 = UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
         let color2 = UIColor(red: 80/255, green: 80/255, blue: 80/255, alpha: 1)
@@ -242,6 +249,38 @@ class LovedItemsDetailViewController: UIViewController {
     }
     
 
+
+    @IBAction func lovedDetailContactOwnerButtonAction(sender: UIButton) {
+    
+         performSegueWithIdentifier("LoveDetailToContactOwnerSegue", sender: self)
+ 
+    }
+    
+    
+    
+    /**************************************************/
+    /******************SEGUE THINGS********************/
+    /**************************************************/
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        let backToPrevious = UIBarButtonItem()
+        backToPrevious.title = "Back"
+        navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        navigationItem.backBarButtonItem = backToPrevious
+        
+        if segue.identifier == "LoveDetailToContactOwnerSegue" {
+            let destViewController : ContactOwnerViewController = segue.destinationViewController as! ContactOwnerViewController
+            
+            destViewController.singleSearchKey = singleSearchKey
+            destViewController.singleSearchResult = singleSearchResult
+            
+            destViewController.title = "Contact Owner"
+        }
+    }
+
+    
+    
     
     deinit {
         print("Loved Items Detail Page : 記憶體釋放")

@@ -2270,6 +2270,20 @@
                                     <constraint firstAttribute="height" constant="315" id="N7T-O5-7RN"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kCU-8e-QjQ">
+                                <rect key="frame" x="389" y="466" width="104" height="36.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36.5" id="IvV-LV-8Ca"/>
+                                    <constraint firstAttribute="width" constant="104" id="eK6-ZR-bB4"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                <state key="normal" title="Contact Owner">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="lovedDetailContactOwnerButtonAction:" destination="mtB-wL-fGD" eventType="touchUpInside" id="Pus-PL-tVs"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -2284,6 +2298,7 @@
                             <constraint firstItem="Kw7-AN-Wyn" firstAttribute="leading" secondItem="MXx-Sz-ZKE" secondAttribute="leadingMargin" id="FoW-me-fDK"/>
                             <constraint firstItem="QnN-P0-KEk" firstAttribute="top" secondItem="dSd-F0-P3k" secondAttribute="bottom" constant="13" id="IuG-n3-W87"/>
                             <constraint firstAttribute="trailingMargin" secondItem="BWh-xJ-6qE" secondAttribute="trailing" constant="-20" id="KRb-vl-O2q"/>
+                            <constraint firstItem="kCU-8e-QjQ" firstAttribute="top" secondItem="dzo-p1-84J" secondAttribute="bottom" constant="37" id="NXx-7N-t9P"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Lyz-J5-fLp" secondAttribute="trailing" constant="8" id="O5p-tw-jdh"/>
                             <constraint firstItem="YBr-mO-PXP" firstAttribute="leading" secondItem="MXx-Sz-ZKE" secondAttribute="leadingMargin" constant="160" id="Rja-N1-noq"/>
                             <constraint firstItem="Ap1-PH-VLq" firstAttribute="leading" secondItem="MXx-Sz-ZKE" secondAttribute="leadingMargin" constant="220" id="SzH-B1-KLU"/>
@@ -2302,6 +2317,7 @@
                             <constraint firstItem="yST-hn-U6k" firstAttribute="leading" secondItem="MXx-Sz-ZKE" secondAttribute="leadingMargin" constant="160" id="hRF-gm-dAc"/>
                             <constraint firstItem="i3l-eZ-kGW" firstAttribute="leading" secondItem="MXx-Sz-ZKE" secondAttribute="leadingMargin" constant="48" id="jBC-63-ww3"/>
                             <constraint firstItem="ZGR-Sv-VJ1" firstAttribute="top" secondItem="tXD-84-Kye" secondAttribute="bottom" constant="17" id="lQ5-1e-Ebw"/>
+                            <constraint firstItem="kCU-8e-QjQ" firstAttribute="centerX" secondItem="MXx-Sz-ZKE" secondAttribute="centerX" id="mUo-XE-zde"/>
                             <constraint firstItem="6ir-21-YqW" firstAttribute="leading" secondItem="MXx-Sz-ZKE" secondAttribute="leadingMargin" id="pG4-tm-hYA"/>
                             <constraint firstItem="3rB-4r-MKN" firstAttribute="leading" secondItem="MXx-Sz-ZKE" secondAttribute="leadingMargin" constant="160" id="v19-9n-ucd"/>
                             <constraint firstItem="gEw-FP-atz" firstAttribute="top" secondItem="BWh-xJ-6qE" secondAttribute="bottom" constant="15" id="wGL-Kk-ygq"/>
@@ -2319,6 +2335,7 @@
                         <outlet property="heartWhiteImageView" destination="dSd-F0-P3k" id="B6N-nx-2oy"/>
                         <outlet property="lovedDetailBrandValueLabel" destination="i3l-eZ-kGW" id="DKf-by-yEv"/>
                         <outlet property="lovedDetailColorValueLabel" destination="dzo-p1-84J" id="5QF-uO-3YS"/>
+                        <outlet property="lovedDetailContactOwnerButton" destination="kCU-8e-QjQ" id="xN6-9Z-Xvg"/>
                         <outlet property="lovedDetailImageView" destination="BWh-xJ-6qE" id="x0J-al-jbC"/>
                         <outlet property="lovedDetailLocationValueLabel" destination="ZGR-Sv-VJ1" id="9XE-2s-AtK"/>
                         <outlet property="lovedDetailMileageValueLabel" destination="tXD-84-Kye" id="9Tc-Fz-dyo"/>
@@ -2326,6 +2343,7 @@
                         <outlet property="lovedDetailPriceValueLabel" destination="df9-mN-MOR" id="ZZB-ph-cn0"/>
                         <outlet property="lovedDetailTimeValueLabel" destination="Ap1-PH-VLq" id="sbA-me-VpL"/>
                         <outlet property="lovedDetailYearValueLabel" destination="gs3-1c-cQQ" id="S6D-SU-BUD"/>
+                        <segue destination="yJq-uT-xLe" kind="show" identifier="LoveDetailToContactOwnerSegue" id="FCx-RM-HAw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fbg-4z-SsU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2542,7 +2560,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tPD-iK-wuz" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="PGM-yC-FDk" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3018" y="-677"/>
+            <point key="canvasLocation" x="3074" y="-677"/>
         </scene>
     </scenes>
     <resources>
@@ -2559,6 +2577,6 @@
         <image name="speech" width="256" height="256"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fv3-4S-WtM"/>
+        <segue reference="FCx-RM-HAw"/>
     </inferredMetricsTieBreakers>
 </document>
