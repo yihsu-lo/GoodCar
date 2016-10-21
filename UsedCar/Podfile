@@ -1,0 +1,22 @@
+platform :ios, '9.0'
+
+target 'UsedCar' do
+
+  use_frameworks!
+
+
+pod 'FBSDKCoreKit'
+pod 'FBSDKLoginKit'
+pod 'FBSDKShareKit'
+pod 'Firebase'
+pod 'Firebase/Auth'
+pod 'Firebase/Database'
+pod 'Firebase/Storage'
+pod 'Firebase/Core'
+
+pod 'Haneke'
+
+pod 'Fabric'
+pod 'Crashlytics'
+
+end
