@@ -28,13 +28,14 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
         
         mySellingItemsTableView.hidden = true
         
+        mySellingItemsTableView.tableFooterView = UIView(frame: .zero)
     }
     
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         
-        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(1.5), target: self, selector: #selector(checkData), userInfo: nil, repeats: false)
+        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(2), target: self, selector: #selector(checkData), userInfo: nil, repeats: false)
     }
     
     
@@ -43,7 +44,7 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
         if firebaseSearchResultKey.count != 0 {
             
             mySellingItemsTableView.hidden = false
-
+            
         }
         
         return firebaseSearchResultKey.count
@@ -59,7 +60,6 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
         
         let cell = mySellingItemsTableView.dequeueReusableCellWithIdentifier("MySellingItemsCell", forIndexPath: indexPath) as! MySellingItemsTableViewCell
         
-        
         cell.mySellingItemsCellBrandLabel.text = firebaseSearchResultValue[indexPath.row].brand
         cell.mySellingItemsCellColorLabel.text = firebaseSearchResultValue[indexPath.row].color
         cell.mySellingItemsCellLocationLabel.text = firebaseSearchResultValue[indexPath.row].location
@@ -68,24 +68,30 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
         
         cell.mySellingItemsCellImageView.layer.cornerRadius = 20
         cell.mySellingItemsCellImageView.alpha = 0.8
-        
+        cell.mySellingItemsCellImageView.clipsToBounds = true
         
         let item = firebaseSearchResultKey[indexPath.row]
         
+        
         if firebaseSearchResultImageURLDictionary[item] != nil {
             
-            cell.mySellingItemsCellImageView.hnk_setImageFromURL(firebaseSearchResultImageURLDictionary[item]!)
+            cell.mySellingItemsCellImageView.hnk_setImageFromURL(self.firebaseSearchResultImageURLDictionary[item]!)
             
         }
         
-        cell.mySellingItemsCellDetailButton.layer.borderColor = UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1).CGColor
-        cell.mySellingItemsCellDetailButton.layer.borderWidth = 1
-        cell.mySellingItemsCellDetailButton.layer.cornerRadius = 6
-        cell.mySellingItemsCellDetailButton.addTarget(self, action: #selector(viewDetail), forControlEvents: .TouchUpInside)
-        cell.mySellingItemsCellDetailButton.tag = indexPath.row
-        
         return cell
     }
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let cellIdentifier = "MySellingItemsCell"
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier,forIndexPath: indexPath) as! MySellingItemsTableViewCell
+        
+        cell.mySellingItemsCellImageView.image = UIImage(named: "black")
+        
+    }
+    
+    
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
@@ -108,9 +114,19 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
     /***************DELETE ROW ACTION******************/
     /**************************************************/
     
-    let rootRef = FIRDatabase.database().referenceWithPath("data")
-    let storageRef = FIRStorage.storage().referenceForURL("gs://usedcar-8e0f0.appspot.com")
+    let dataRootRef = FIRDatabase.database().referenceWithPath("data")
+    let storageRef = FIRStorage.storage().referenceForURL("gs://goodcar-47440.appspot.com/")
     
+    
+    var allMessageID : [String] = []
+    var allLikesID : [String] = []
+    var allTokenID : [String] = []
+    
+    let messageRootRef = FIRDatabase.database().referenceWithPath("message")
+    let likesRootRef = FIRDatabase.database().referenceWithPath("likes")
+    let tokenRootRef = FIRDatabase.database().referenceWithPath("userToken")
+    
+    let lastRootRef = FIRDatabase.database().referenceWithPath("latestMessage")
     
     func tableView(tablewView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
@@ -120,6 +136,74 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
         singleSearchImageURL = firebaseSearchResultImageURLDictionary[singleSearchKey]!
         
         singleSearchResult = [firebaseSearchResultValue[indexPath.row]]
+        
+        
+        /**************************************************/
+        /*************GET MESSAGE & LIKES ID***************/
+        /**************************************************/
+        
+        messageHandler = messageRootRef.queryOrderedByChild("carID").queryEqualToValue(singleSearchKey).observeEventType(.Value, withBlock: { snapshot in
+            
+            if snapshot.exists() {
+                
+                for item in [snapshot.value] {
+                    guard let itemDictionary = item as? NSDictionary else {
+                        
+                        return
+                        //                        fatalError()
+                    }
+                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                        
+                        return
+                        //                        fatalError()
+                    }
+                    self.allMessageID = firebaseItemKey
+                    
+                }
+            }
+            
+        })
+        
+        likesHandler = likesRootRef.queryOrderedByChild("dataID").queryEqualToValue(singleSearchKey).observeEventType(.Value, withBlock: { snapshot in
+            
+            if snapshot.exists() {
+                
+                for item in [snapshot.value] {
+                    guard let itemDictionary = item as? NSDictionary else {
+                        
+                        return
+                        //                        fatalError()
+                    }
+                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                        
+                        return
+                        //                      fatalError()
+                    }
+                    self.allLikesID = firebaseItemKey
+                }
+            }
+        })
+        
+        tokenHandler = tokenRootRef.queryOrderedByChild("carID").queryEqualToValue(singleSearchKey).observeEventType(.Value, withBlock: { snapshot in
+            
+            if snapshot.exists() {
+                
+                for item in [snapshot.value] {
+                    guard let itemDictionary = item as? NSDictionary else {
+                        
+                        return
+                        //                        fatalError()
+                    }
+                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                        
+                        return
+                        //                      fatalError()
+                    }
+                    self.allTokenID = firebaseItemKey
+                }
+            }
+            
+        })
         
         
         if editingStyle == .Delete {
@@ -138,19 +222,38 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
                         
                     } else {
                         
-                        self.rootRef.child(self.singleSearchKey).removeValue()
+                        self.dataRootRef.child(self.singleSearchKey).removeValue()
+                        self.lastRootRef.child(self.singleSearchKey).removeValue()
+                        
+                        for singleMessageID in self.allMessageID {
+                            
+                            self.messageRootRef.child(singleMessageID).removeValue()
+                        }
+                        
+                        for singleLikesID in self.allLikesID {
+                            
+                            self.likesRootRef.child(singleLikesID).removeValue()
+                        }
+                        
+                        for singleTokenID in self.allTokenID {
+                            
+                            self.tokenRootRef.child(singleTokenID).removeValue()
+                        }
                         
                         print("delete data success")
-                        
                         
                         self.firebaseSearchResultKey.removeAtIndex(indexPath.row)
                         
                         self.firebaseSearchResultValue.removeAtIndex(indexPath.row)
+                        
                         self.firebaseSearchResultImageURLDictionary.removeValueForKey(self.singleSearchKey)
                         
                         self.mySellingItemsTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                         
-                        self.mySellingItemsTableView.reloadData()
+                        if self.mySellingItemsTableView != nil {
+                            
+                            self.mySellingItemsTableView.reloadData()
+                        }
                     }
                     
                 }
@@ -178,20 +281,6 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
     var singleSearchKey : String = ""
     var singleSearchImageURL : NSURL = NSURL()
     
-    func viewDetail(sender: UIButton!) {
-        
-        singleSearchKey = firebaseSearchResultKey[sender.tag]
-        
-        if firebaseSearchResultImageURLDictionary[singleSearchKey] != nil {
-            
-            singleSearchImageURL = firebaseSearchResultImageURLDictionary[singleSearchKey]!
-        }
-        
-        singleSearchResult = [firebaseSearchResultValue[Int(sender.tag)]]
-        
-        performSegueWithIdentifier("MySellingItemsDetailSegue", sender: sender)
-    }
-    
     
     /**************************************************/
     /******************SEGUE THINGS********************/
@@ -200,7 +289,7 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         let backToPrevious = UIBarButtonItem()
-        backToPrevious.title = "Back"
+        backToPrevious.title = ""
         navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         navigationItem.backBarButtonItem = backToPrevious
         
@@ -238,6 +327,29 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
             alertController.addAction(goBackAction)
             
             self.presentViewController(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    
+    private var messageHandler : FIRDatabaseHandle!
+    
+    private var likesHandler : FIRDatabaseHandle!
+    
+    private var tokenHandler : FIRDatabaseHandle!
+    
+    deinit {
+        
+        if messageHandler != nil {
+            
+            self.messageRootRef.child("message").removeObserverWithHandle(messageHandler)
+        }
+        
+        if likesHandler != nil {
+            self.likesRootRef.child("likes").removeObserverWithHandle(likesHandler)
+        }
+        
+        if tokenHandler != nil {
+            self.tokenRootRef.child("userToken").removeObserverWithHandle(tokenHandler)
         }
     }
     

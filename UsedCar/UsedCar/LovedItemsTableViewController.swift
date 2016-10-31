@@ -23,13 +23,13 @@ class LovedItemsTableViewController: UIViewController, UITableViewDataSource, UI
 
         lovedItemsTableView.hidden = true
         
-//        lovedItemsTableView.tableFooterView = UIView(frame: .zero)
+        lovedItemsTableView.tableFooterView = UIView(frame: .zero)
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         
-        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(1.5), target: self, selector: #selector(checkData), userInfo: nil, repeats: false)
+        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(2), target: self, selector: #selector(checkData), userInfo: nil, repeats: false)
     
     }
     
@@ -67,6 +67,7 @@ class LovedItemsTableViewController: UIViewController, UITableViewDataSource, UI
         
         cell.lovedItemsCellImageView.layer.cornerRadius = 20
         cell.lovedItemsCellImageView.alpha = 0.8
+        cell.lovedItemsCellImageView.clipsToBounds = true
         
         let item = firebaseLikesAutoID[indexPath.row]
         
@@ -75,14 +76,17 @@ class LovedItemsTableViewController: UIViewController, UITableViewDataSource, UI
             cell.lovedItemsCellImageView.hnk_setImageFromURL(firebaseSearchResultImageURLDictionary[item]!)
         }
         
-        cell.lovedItemsCellDetailButton.layer.borderColor = UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1).CGColor
-        
-        cell.lovedItemsCellDetailButton.layer.borderWidth = 1
-        cell.lovedItemsCellDetailButton.layer.cornerRadius = 6
-        cell.lovedItemsCellDetailButton.addTarget(self, action: #selector(viewDetail), forControlEvents: .TouchUpInside)
-        cell.lovedItemsCellDetailButton.tag = indexPath.row
-        
         return cell
+    }
+    
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let cellIdentifier = "LovedItemsCell"
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier,forIndexPath: indexPath) as! LovedItemsTableViewCell
+        
+        cell.lovedItemsCellImageView.image = UIImage(named: "black")
+        
     }
     
     
@@ -111,23 +115,6 @@ class LovedItemsTableViewController: UIViewController, UITableViewDataSource, UI
     var singleSearchKey : String = ""
     var singleSearchImageURL : NSURL = NSURL()
     
-    func viewDetail(sender: UIButton) {
-        
-        singleSearchKey = firebaseLikesAutoID[sender.tag]
-        
-        singleSearchResult = [firebaseSearchInfo[Int(sender.tag)]]
-        
-        if firebaseSearchResultImageURLDictionary[singleSearchKey] != nil {
-            
-            singleSearchImageURL = firebaseSearchResultImageURLDictionary[singleSearchKey]!
-         
-            performSegueWithIdentifier("LovedItemsDetailSegue", sender: sender)
-            
-        }
-        
-    }
-    
-    
     /**************************************************/
     /******************SEGUE THINGS********************/
     /**************************************************/
@@ -135,12 +122,12 @@ class LovedItemsTableViewController: UIViewController, UITableViewDataSource, UI
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         let backToPrevious = UIBarButtonItem()
-        backToPrevious.title = "Back"
+        backToPrevious.title = ""
         navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         navigationItem.backBarButtonItem = backToPrevious
         
         if segue.identifier == "LovedItemsDetailSegue" {
-            let destViewController : LovedItemsDetailViewController = segue.destinationViewController as! LovedItemsDetailViewController
+            let destViewController : SearchDetailViewController = segue.destinationViewController as! SearchDetailViewController
             
             destViewController.singleSearchKey = singleSearchKey
             destViewController.singleSearchResult = singleSearchResult

@@ -21,7 +21,5 @@ class MySellingItemsTableViewCell: UITableViewCell {
     @IBOutlet weak var mySellingItemsCellPriceLabel: UILabel!
 
     @IBOutlet weak var mySellingItemsCellMileageLabel: UILabel!
-    
-    @IBOutlet weak var mySellingItemsCellDetailButton: UIButton!
-    
+
 }

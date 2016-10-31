@@ -234,13 +234,13 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
     
     
     func textFieldDidEndEditing(textField: UITextField) {
-
+        
         self.animateTextField(textField, up: false)
     }
     
     func animateTextField(textField: UITextField, up: Bool) {
         
-        let movementDistance:CGFloat = -140
+        let movementDistance:CGFloat = -160
         let movementDuration: Double = 0.3
         
         var movement:CGFloat = 0
@@ -284,7 +284,7 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
             return false
         }
     }
-
+    
     
     /**************************************************/
     /***************PICKERVIEW THINGS******************/
@@ -403,7 +403,6 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
     
     @IBAction func saveButtonAction(sender: UIButton) {
         
-        
         spinner.startAnimating()
         
         let autoID = rootRef.child("data").childByAutoId().key
@@ -419,8 +418,6 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
             let defaultTimeZoneString = formatter.stringFromDate(date)
             
-            
-            
             uploadData = [
                 "brand" : brandTextField.text!.stringByReplacingOccurrencesOfString(" ", withString: ""),
                 "model" : modelTextField.text!.stringByReplacingOccurrencesOfString(" ", withString: ""),
@@ -435,10 +432,28 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
                 "firebaseUserID" : FirebaseManager.shared.firebaseUserID,
                 "facebookUserID" : FirebaseManager.shared.facebookUserID,
                 "searchInfo" : "\(brandTextField.text!.stringByReplacingOccurrencesOfString(" ", withString: ""))_\(colorTextField.text!.stringByReplacingOccurrencesOfString(" ", withString: ""))"
+                
             ]
             
-            rootRef.child(autoID).setValue(uploadData)
             
+            if FirebaseManager.shared.firebaseUserID != "" && FirebaseManager.shared.facebookUserID != "" {
+                
+                rootRef.child(autoID).setValue(uploadData)
+                saveStorageImage()
+                
+            } else {
+                
+                let alertController = UIAlertController(title: "Warning", message: "User Information is not available! Please try again!", preferredStyle: UIAlertControllerStyle.Alert)
+                let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
+                    
+                    self.spinner.stopAnimating()
+                }
+                
+                alertController.addAction(goBackAction)
+                
+                presentViewController(alertController, animated: true, completion: nil)
+                
+            }
             saveStorageImage()
             
             
@@ -464,7 +479,7 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
     /**************************************************/
     
     
-    let storageRef = FIRStorage.storage().referenceForURL("gs://usedcar-8e0f0.appspot.com")
+    let storageRef = FIRStorage.storage().referenceForURL("gs://goodcar-47440.appspot.com/")
     
     func saveStorageImage() {
         
@@ -503,8 +518,8 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
                 /**************************************************/
                 
                 FIRAnalytics.logEventWithName(kFIREventSelectContent, parameters: [
-                    kFIRParameterContentType : FirebaseManager.shared.firebaseUserID,
-                    kFIRParameterItemID : "user upload : \(self.autoIDToStorage)"
+                    kFIRParameterContentType : "user upload data",
+                    kFIRParameterItemID : "\(FirebaseManager.shared.firebaseUserID)_\(self.autoIDToStorage)"
                     ])
                 
                 /**************************************************/

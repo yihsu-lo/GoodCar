@@ -39,6 +39,7 @@ class SearchDetailViewController: UIViewController {
     
     @IBOutlet weak var heartRedImageView: UIImageView!
     
+    @IBOutlet weak var contactFacebookButton: UIButton!
     
     
     var singleSearchKey : String = ""
@@ -97,6 +98,10 @@ class SearchDetailViewController: UIViewController {
         
         contactOwnerButton.addTarget(self, action: #selector(contactOwenerAction), forControlEvents: .TouchUpInside)
         
+        contactFacebookButton.backgroundColor = UIColor(red: 59/255, green: 95/255, blue: 158/255, alpha: 0.8)
+        contactFacebookButton.layer.cornerRadius = 10
+        
+        
         detailImageView.hnk_setImageFromURL(singleSearchImageURL)
         
         
@@ -124,40 +129,47 @@ class SearchDetailViewController: UIViewController {
                 if snapshot.exists() {
                     
                     guard let itemDictionary = snapshot.value as? NSDictionary else {
-                        fatalError()
+                        
+                        return
+                        //                        fatalError()
                     }
                     
                     guard let likesDataKey = itemDictionary.allKeys as? [String] else {
-                        fatalError()
+                        
+                        return
+                        //                        fatalError()
                     }
                     
                     for item in likesDataKey {
                         self.firebaseLikeID = item
                     }
                     
-                    print("user liked the car!")
                     self.heartRedImageView.hidden = false
                     self.heartWhiteImageView.hidden = true
                     
                     
                 } else {
-                    print("user did not like the car!")
+                    
                     self.heartRedImageView.hidden = true
                     self.heartWhiteImageView.hidden = false
                 }
             })
         }
         
-
+        
         /**************************************************/
         /****************FIREBASE ANALYTICS****************/
         /**************************************************/
         
         FIRAnalytics.logEventWithName(kFIREventSelectContent, parameters: [
-            kFIRParameterContentType : FirebaseManager.shared.firebaseUserID,
-            kFIRParameterItemID : "user check detail : \(singleSearchKey)"
+            kFIRParameterContentType : "user check detail",
+            kFIRParameterItemID : "\(FirebaseManager.shared.firebaseUserID)_\(singleSearchKey)"
             ])
         
+        FIRAnalytics.logEventWithName(kFIREventViewItem, parameters: [
+            kFIRParameterContentType : singleSearchKey,
+            kFIRParameterItemID : FirebaseManager.shared.firebaseUserID
+            ])
     }
     
     /**************************************************/
@@ -171,7 +183,7 @@ class SearchDetailViewController: UIViewController {
     func likeToDatabase() {
         
         let autoID = rootRef.child("likes").childByAutoId().key
-
+        
         
         likesInfo = [
             "firebaseUserID" : FirebaseManager.shared.firebaseUserID,
@@ -179,9 +191,6 @@ class SearchDetailViewController: UIViewController {
             "searchInfo" : "\(FirebaseManager.shared.firebaseUserID)_\(singleSearchKey)"]
         
         rootRef.child(autoID).setValue(likesInfo)
-        
-        print("user press likes the car!")
-        
         
         firebaseLikeID = autoID
         
@@ -196,8 +205,8 @@ class SearchDetailViewController: UIViewController {
         /**************************************************/
         
         FIRAnalytics.logEventWithName(kFIREventSelectContent, parameters: [
-            kFIRParameterContentType : FirebaseManager.shared.firebaseUserID,
-            kFIRParameterItemID : "user likes : \(singleSearchKey)"
+            kFIRParameterContentType : "user likes",
+            kFIRParameterItemID : "\(FirebaseManager.shared.firebaseUserID)_\(singleSearchKey)"
             ])
         
         
@@ -213,8 +222,6 @@ class SearchDetailViewController: UIViewController {
         if firebaseLikeID != "" {
             
             rootRef.child(firebaseLikeID).removeValue()
-            
-            print("user press dislike the car!")
             
             heartRedImageView.hidden = true
             
@@ -278,8 +285,31 @@ class SearchDetailViewController: UIViewController {
         
         performSegueWithIdentifier("ContactOwnerActionSegue", sender: [])
     }
-
     
+    
+    
+    /**************************************************/
+    /*************CONTACT FACEBOOK ACTION**************/
+    /**************************************************/
+    
+    @IBAction func contactFacebookAction(sender: UIButton) {
+        
+        let FBLink = "https://www.facebook.com/app_scoped_user_id/\(singleSearchResult[0].facebookUserID)"
+        
+        let FBURL = NSURL(string: FBLink)!
+        
+        if UIApplication.sharedApplication().canOpenURL(FBURL) {
+            
+            UIApplication.sharedApplication().openURL(FBURL)
+            
+        } else {
+            
+            let safariVC = SFSafariViewController(URL: FBURL)
+            
+            presentViewController(safariVC, animated: true, completion: nil)
+        }
+        
+    }
     
     /**************************************************/
     /******************SEGUE THINGS********************/
@@ -287,19 +317,19 @@ class SearchDetailViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-                let backToPrevious = UIBarButtonItem()
-                backToPrevious.title = "Back"
-                navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-                navigationItem.backBarButtonItem = backToPrevious
+        let backToPrevious = UIBarButtonItem()
+        backToPrevious.title = ""
+        navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        navigationItem.backBarButtonItem = backToPrevious
         
         if segue.identifier == "ContactOwnerActionSegue" {
             let destViewController : ContactOwnerViewController = segue.destinationViewController as! ContactOwnerViewController
-        
+            
             destViewController.singleSearchKey = singleSearchKey
             destViewController.singleSearchResult = singleSearchResult
             
             destViewController.title = "Contact Owner"
         }
     }
-
+    
 }

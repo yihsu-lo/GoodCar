@@ -33,7 +33,7 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
         
         priceRangeValue = Int(sender.value)
         
-        priceNumberLabel.text = "NTD 0 ~ \(currentValue)W"
+        priceNumberLabel.text = "NTD 0~\(NSString(format : "%.1f",currentValue))W"
     }
     
     
@@ -43,7 +43,7 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
         
         mileageRangeValue = Int(sender.value)
         
-        mileageNumberLabel.text = "0 ~ \(currentValue)W KM"
+        mileageNumberLabel.text = "0~\(NSString(format : "%.1f",currentValue))W KM"
         
     }
     
@@ -190,6 +190,7 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
     private var infoHandler: FIRDatabaseHandle!
     
     
+    
     @IBAction func searchButtonAction(sender: UIButton) {
         
         
@@ -226,7 +227,9 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
                                 let userNameData = item!["userName"] as? String,
                                 let facebookUseIDData = item!["facebookUserID"] as? String else {
                                     
-                                    fatalError()
+                                    return
+                                    
+                                    //                                    fatalError()
                             }
                             
                             self.firebaseSearchResultKey.append(snapshot.key)
@@ -267,10 +270,9 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
             
             let storage = FIRStorage.storage()
             
-            let storageRef = storage.referenceForURL("gs://usedcar-8e0f0.appspot.com/")
+            let storageRef = storage.referenceForURL("gs://goodcar-47440.appspot.com/")
             
             let imageRef = storageRef.child(item)
-            
             
             imageRef.downloadURLWithCompletion { (URL, error) -> Void in
                 
@@ -286,16 +288,23 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
                         
                         self.searchTableViewController.firebaseSearchResultImageURLDictionary = self.firebaseSearchResultImageURLDictionary
                         
-                        self.searchTableViewController.searchTableView.reloadData()
-
-                        
+                        if self.searchTableViewController.searchTableView != nil {
+                            
+                            self.searchTableViewController.searchTableView.reloadData()
+                            
+                        }
                         /**************************************************/
                         /****************FIREBASE ANALYTICS****************/
                         /**************************************************/
                         
                         FIRAnalytics.logEventWithName(kFIREventSelectContent, parameters: [
-                            kFIRParameterContentType : FirebaseManager.shared.firebaseUserID,
-                            kFIRParameterItemID : "user search : \(self.brandTextField.text!)"
+                            kFIRParameterContentType : "user search data",
+                            kFIRParameterItemID : "\(FirebaseManager.shared.firebaseUserID)_\(self.brandTextField.text!)"
+                            ])
+                        
+                        FIRAnalytics.logEventWithName(kFIREventSearch, parameters: [
+                            kFIRParameterContentType : self.brandTextField.text!,
+                            kFIRParameterItemID : FirebaseManager.shared.firebaseUserID
                             ])
                     }
                 }
@@ -342,7 +351,7 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
             let destViewController: SearchTableViewController = segue.destinationViewController as! SearchTableViewController
             
             let backToPrevious = UIBarButtonItem()
-            backToPrevious.title = "Back"
+            backToPrevious.title = ""
             navigationController?.navigationBar.tintColor = UIColor.whiteColor()
             navigationItem.backBarButtonItem = backToPrevious
             destViewController.title = "Search Results"

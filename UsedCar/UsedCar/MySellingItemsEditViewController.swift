@@ -193,7 +193,7 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
     
     func animateTextField(textField: UITextField, up: Bool) {
         
-        let movementDistance:CGFloat = -140
+        let movementDistance:CGFloat = -160
         let movementDuration: Double = 0.3
         
         var movement:CGFloat = 0
@@ -341,14 +341,12 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
     /*****UPDATE DATA THINGS---DATABASE & STORAGE******/
     /**************************************************/
     
-    
-    
     /**************************************************/
     /*****************UPDATE DATABASE******************/
     /**************************************************/
     
     
-    let rootRef = FIRDatabase.database().referenceWithPath("data")
+    let dataRootRef = FIRDatabase.database().referenceWithPath("data")
     var updatedData : [String : AnyObject] = [ : ]
     
     
@@ -381,7 +379,7 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
                 "searchInfo" : "\(editBrandTextField.text!.stringByReplacingOccurrencesOfString(" ", withString: ""))_\(editColorTextField.text!.stringByReplacingOccurrencesOfString(" ", withString: ""))"
             ]
             
-            rootRef.child(singleSearchKey).updateChildValues(updatedData)
+            dataRootRef.child(singleSearchKey).updateChildValues(updatedData)
             
             
             updateStorageImage()
@@ -406,8 +404,7 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
     /**************************************************/
     
     
-    let storageRef = FIRStorage.storage().referenceForURL("gs://usedcar-8e0f0.appspot.com")
-    
+    let storageRef = FIRStorage.storage().referenceForURL("gs://goodcar-47440.appspot.com/")
     
     func updateStorageImage() {
         
@@ -419,7 +416,7 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
         guard let imageData = UIImagePNGRepresentation(pickedImageParameter) else {
             
             print("image not change, then go back!")
-        
+            
             /**************************************************/
             /**************BACK TO PROFILE PAGE****************/
             /**************************************************/
@@ -506,9 +503,90 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
         }
     }
     
+    
+    /**************************************************/
+    /*********GET MESSAGE & LIKES & TOKEN ID***********/
+    /**************************************************/
+    
+    var allMessageID : [String] = []
+    var allLikesID : [String] = []
+    var allTokenID : [String] = []
+    
+    let messageRootRef = FIRDatabase.database().referenceWithPath("message")
+    let likesRootRef = FIRDatabase.database().referenceWithPath("likes")
+    let tokenRootRef = FIRDatabase.database().referenceWithPath("userToken")
+    
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        
+        messageHandler = messageRootRef.queryOrderedByChild("carID").queryEqualToValue(singleSearchKey).observeEventType(.Value, withBlock: { snapshot in
+            
+            if snapshot.exists() {
+                
+                for item in [snapshot.value] {
+                    guard let itemDictionary = item as? NSDictionary else {
+                        
+                        return
+//                        fatalError()
+                    }
+                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                        
+                        return
+//                        fatalError()
+                    }
+                    self.allMessageID = firebaseItemKey
+                }
+            }
+            
+        })
+        
+        likesHandler = likesRootRef.queryOrderedByChild("dataID").queryEqualToValue(singleSearchKey).observeEventType(.Value, withBlock: { snapshot in
+         
+            if snapshot.exists() {
+                for item in [snapshot.value] {
+                    guard let itemDictionary = item as? NSDictionary else {
+                        
+                        return
+//                        fatalError()
+                    }
+                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                        
+                        return
+//                         fatalError()
+                    }
+                    self.allLikesID = firebaseItemKey
+                }
+            }
+        })
+        
+        tokenHandler = tokenRootRef.queryOrderedByChild("carID").queryEqualToValue(singleSearchKey).observeEventType(.Value, withBlock: { snapshot in
+            
+            if snapshot.exists() {
+                for item in [snapshot.value] {
+                    guard let itemDictionary = item as? NSDictionary else {
+                        
+                        return
+                        //                        fatalError()
+                    }
+                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                        
+                        return
+                        //                         fatalError()
+                    }
+                    self.allTokenID = firebaseItemKey
+                }
+            }
+        })
+        
+    }
+    
+    
     /**************************************************/
     /************DELETE DATABASE & STORAGE*************/
     /**************************************************/
+    
+    let lastRootRef = FIRDatabase.database().referenceWithPath("latestMessage")
     
     @IBAction func editDeleteButtonAction(sender: UIButton) {
         
@@ -531,7 +609,21 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
                         
                         self.spinner.stopAnimating()
                         
-                        self.rootRef.child(self.singleSearchKey).removeValue()
+                        self.dataRootRef.child(self.singleSearchKey).removeValue()
+                        self.lastRootRef.child(self.singleSearchKey).removeValue()
+                        
+                        for singleMessageID in self.allMessageID {
+                            
+                            self.messageRootRef.child(singleMessageID).removeValue()
+                        }
+                        
+                        for singleLikesID in self.allLikesID {
+                            self.likesRootRef.child(singleLikesID).removeValue()
+                        }
+                        
+                        for singleTokenID in self.allTokenID {
+                            self.tokenRootRef.child(singleTokenID).removeValue()
+                        }
                         
                         print("delete data success")
                         
@@ -550,6 +642,29 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
             self.presentViewController(alertController, animated: true, completion: nil)
         }
         
+    }
+    
+    
+    private var messageHandler : FIRDatabaseHandle!
+    
+    private var likesHandler : FIRDatabaseHandle!
+    
+    private var tokenHandler : FIRDatabaseHandle!
+    
+    deinit {
+        
+        if messageHandler != nil {
+            
+            self.messageRootRef.child("message").removeObserverWithHandle(messageHandler)
+        }
+        
+        if likesHandler != nil {
+            self.likesRootRef.child("likes").removeObserverWithHandle(likesHandler)
+        }
+        
+        if tokenHandler != nil {
+            self.tokenRootRef.child("userToken").removeObserverWithHandle(tokenHandler)
+        }
     }
     
 }

@@ -36,28 +36,11 @@ class ProfileViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        if Reachability.isConnectedToNetwork() != true {
-            
-            let alertController = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.Alert)
-            let goBackAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-            }
-            alertController.addAction(goBackAction)
-            
-            presentViewController(alertController, animated: true, completion: nil)
-        }
-        
-        
-        
         mySellingFirebaseSearchInfo = []
-        
         mySellingFirebaseSearchResultKey = []
-        
         mySellingFirebaseSearchResultImageURLDictionary = [ : ]
-        
         likesFirebaseSearchInfo = []
-        
         likesFirebaseLikesAutoID = []
-        
         likesFirebaseSearchResultImageURLDictionary = [ : ]
     }
     
@@ -97,20 +80,17 @@ class ProfileViewController: UIViewController {
         profileLovedItemsButton.layer.cornerRadius = 20
         profileLovedItemsButton.tintColor = UIColor.whiteColor()
         
-        
         profileNameLabel.clipsToBounds = true
         
         profileNameLabel.backgroundColor = UIColor(red: 72/255, green: 159/255, blue: 176/255, alpha: 1)
         profileNameLabel.layer.cornerRadius = 20
         profileNameLabel.tintColor = UIColor.whiteColor()
         
-        
         if let userProfilePicURL = defaults.objectForKey("picture") as? String {
             let url = NSURL(string: userProfilePicURL)
             
             profileImageView.hnk_setImageFromURL(url!)
         }
-        
         
         if let userNameText = defaults.objectForKey("name") as? String {
             profileNameLabel.text = userNameText
@@ -121,7 +101,6 @@ class ProfileViewController: UIViewController {
         let tapNameLabel = UITapGestureRecognizer(target: self, action: #selector(showFacebookPage))
         profileNameLabel.addGestureRecognizer(tapNameLabel)
         profileNameLabel.userInteractionEnabled = true
-        
         
         
         /**************************************************/
@@ -140,11 +119,8 @@ class ProfileViewController: UIViewController {
     func receieveUpdatedLovedItemsNotfication(notification: NSNotification) {
         
         likesFirebaseLikesAutoID = []
-        
         likesFirebaseSearchInfo = []
-        
         likesFirebaseSearchResultImageURLDictionary = [ : ]
-        
         retrieveLikesDataID()
     }
     
@@ -190,17 +166,21 @@ class ProfileViewController: UIViewController {
                     for item in [snapshot.value] {
                         
                         guard let itemDictionary = item as? NSDictionary else {
-                            fatalError()
+                            
+                            return
+                            //                            fatalError()
                         }
                         
                         guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
-                            fatalError()
+                            return
+                            //                            fatalError()
                         }
                         
                         self.mySellingFirebaseSearchResultKey = firebaseItemKey
                         
                         guard let firebaseItemValue = itemDictionary.allValues as? [NSDictionary] else {
-                            fatalError()
+                            return
+                            //                            fatalError()
                         }
                         
                         for item in firebaseItemValue {
@@ -218,7 +198,8 @@ class ProfileViewController: UIViewController {
                                 let userNameData = item["userName"] as? String,
                                 let facebookUserIDData = item["facebookUserID"] as? String else {
                                     
-                                    fatalError()
+                                    return
+                                    //                                    fatalError()
                             }
                             
                             self.mySellingFirebaseSearchInfo.append(SearchDataViewController.FirebaseSearchResultData(brand: brandData, color: colorData, firebaseUserID: firebaseUserIDData, location: locationData, model: modelData, price: priceData, mileage: mileageData, year: yearData, time: timeData, userLink: userLinkData, userName: userNameData, facebookUserID: facebookUserIDData))
@@ -246,7 +227,7 @@ class ProfileViewController: UIViewController {
             
         } else {
             
-            let alertController = UIAlertController(title: "Warning", message: "User information is not available!", preferredStyle: UIAlertControllerStyle.Alert)
+            let alertController = UIAlertController(title: "Warning", message: "User information is not available! Please try again!", preferredStyle: UIAlertControllerStyle.Alert)
             let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
                 
             }
@@ -268,7 +249,7 @@ class ProfileViewController: UIViewController {
             
             let storage = FIRStorage.storage()
             
-            let storageRef = storage.referenceForURL("gs://usedcar-8e0f0.appspot.com/")
+            let storageRef = storage.referenceForURL("gs://goodcar-47440.appspot.com/")
             
             let imageRef = storageRef.child(item)
             
@@ -325,7 +306,6 @@ class ProfileViewController: UIViewController {
     }
     
     
-    
     /**************************************************/
     /****RETRIEVE DATA THINGS---DATABASE & STORAGE*****/
     /**************************************************/
@@ -360,11 +340,14 @@ class ProfileViewController: UIViewController {
                     for item in [snapshot.value] {
                         
                         guard let itemDictionary = item as? NSDictionary else {
-                            fatalError()
+                            
+                            return
+                            //                            fatalError()
                         }
                         
                         guard let likesItemDictionary = itemDictionary.allValues as? [NSDictionary] else {
-                            fatalError()
+                            return
+                            //                            fatalError()
                         }
                         
                         for item in likesItemDictionary {
@@ -380,14 +363,17 @@ class ProfileViewController: UIViewController {
                     
                     self.lovedItemsTableViewController.firebaseLikesAutoID = self.likesFirebaseLikesAutoID
                     
-                    self.lovedItemsTableViewController.lovedItemsTableView.reloadData()
-                    
+                    if self.lovedItemsTableViewController.lovedItemsTableView != nil {
+                        
+                        self.lovedItemsTableViewController.lovedItemsTableView.reloadData()
+                        
+                    }
                 }
             })
             
         } else {
             
-            let alertController = UIAlertController(title: "Warning", message: "User information is not available!", preferredStyle: UIAlertControllerStyle.Alert)
+            let alertController = UIAlertController(title: "Warning", message: "User information is not available! Please try again!", preferredStyle: UIAlertControllerStyle.Alert)
             let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
                 
             }
@@ -421,7 +407,8 @@ class ProfileViewController: UIViewController {
                 
                 guard let firebaseItemValue = snapshot.value as? NSDictionary else {
                     
-                    fatalError()
+                    return
+                    //                    fatalError()
                 }
                 
                 guard let brandData = firebaseItemValue["brand"] as? String,
@@ -437,7 +424,8 @@ class ProfileViewController: UIViewController {
                     let userNameData = firebaseItemValue["userName"] as? String,
                     let facebookUserIDData = firebaseItemValue["facebookUserID"] as? String else {
                         
-                        fatalError()
+                        return
+                        //                        fatalError()
                 }
                 
                 self.likesFirebaseSearchInfo.append(SearchDataViewController.FirebaseSearchResultData(brand: brandData, color: colorData, firebaseUserID: firebaseUserIDData, location: locationData, model: modelData, price: priceData, mileage: mileageData, year: yearData, time: timeData, userLink: userLinkData, userName: userNameData, facebookUserID: facebookUserIDData))
@@ -465,7 +453,7 @@ class ProfileViewController: UIViewController {
             
             let storage = FIRStorage.storage()
             
-            let storageRef = storage.referenceForURL("gs://usedcar-8e0f0.appspot.com/")
+            let storageRef = storage.referenceForURL("gs://goodcar-47440.appspot.com/")
             
             let imageRef = storageRef.child(item)
             
@@ -506,7 +494,7 @@ class ProfileViewController: UIViewController {
             let destViewController: MySellingItemsTableViewController = segue.destinationViewController as! MySellingItemsTableViewController
             
             let backToPrevious = UIBarButtonItem()
-            backToPrevious.title = "Back"
+            backToPrevious.title = ""
             navigationController?.navigationBar.tintColor = UIColor.whiteColor()
             navigationItem.backBarButtonItem = backToPrevious
             destViewController.title = "My Selling Cars"
@@ -525,7 +513,7 @@ class ProfileViewController: UIViewController {
             let destViewController: LovedItemsTableViewController = segue.destinationViewController as! LovedItemsTableViewController
             
             let backToPrevious = UIBarButtonItem()
-            backToPrevious.title = "Back"
+            backToPrevious.title = ""
             navigationController?.navigationBar.tintColor = UIColor.whiteColor()
             navigationItem.backBarButtonItem = backToPrevious
             destViewController.title = "Loved Cars"
@@ -536,6 +524,7 @@ class ProfileViewController: UIViewController {
             
             lovedItemsTableViewController = destViewController
         }
+        
     }
     
     
@@ -558,7 +547,7 @@ class ProfileViewController: UIViewController {
     @IBAction func unwindToProfileFromLovedItemsTable(segue: UIStoryboardSegue) {
         
     }
-  
+    
 }
 
 

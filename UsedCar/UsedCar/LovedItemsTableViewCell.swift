@@ -22,6 +22,4 @@ class LovedItemsTableViewCell: UITableViewCell {
     
     @IBOutlet weak var lovedItemsCellMileageLabel: UILabel!
     
-    @IBOutlet weak var lovedItemsCellDetailButton: UIButton!
-    
 }

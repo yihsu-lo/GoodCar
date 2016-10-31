@@ -106,7 +106,7 @@ class MySellingItemsDetailViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         let backToPrevious = UIBarButtonItem()
-        backToPrevious.title = "Back"
+        backToPrevious.title = ""
         navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         navigationItem.backBarButtonItem = backToPrevious
         

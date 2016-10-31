@@ -59,25 +59,9 @@ class ViewController: UIViewController {
         let tapSearch = UITapGestureRecognizer(target: self, action: #selector(toSearchDataPage))
         findCarBackgroundView.addGestureRecognizer(tapSearch)
         findCarBackgroundView.userInteractionEnabled = true
-        
+
     }
 
-    
-        override func viewDidAppear(animated: Bool) {
-            super.viewDidAppear(true)
-    
-            if Reachability.isConnectedToNetwork() != true {
-            
-            let alertController = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.Alert)
-            let goBackAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-            }
-            alertController.addAction(goBackAction)
-    
-            presentViewController(alertController, animated: true, completion: nil)
-        }
-    }
-    //f
-    //f
     
     /**************************************************/
     /******************SEGUE THINGS********************/
@@ -89,7 +73,7 @@ class ViewController: UIViewController {
             let destViewController: UploadDataViewController = segue.destinationViewController as! UploadDataViewController
             
             let backToPrevious = UIBarButtonItem()
-            backToPrevious.title = "Back"
+            backToPrevious.title = ""
             navigationController?.navigationBar.tintColor = UIColor.whiteColor()
             navigationItem.backBarButtonItem = backToPrevious
             
@@ -102,7 +86,7 @@ class ViewController: UIViewController {
             let destViewController: SearchDataViewController = segue.destinationViewController as! SearchDataViewController
             
             let backToPrevious = UIBarButtonItem()
-            backToPrevious.title = "Back"
+            backToPrevious.title = ""
             navigationController?.navigationBar.tintColor = UIColor.whiteColor()
             navigationItem.backBarButtonItem = backToPrevious
 

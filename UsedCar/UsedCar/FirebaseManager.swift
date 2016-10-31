@@ -7,17 +7,9 @@
 //
 
 import Foundation
-//import Firebase
 
-//protocol FirebaseManagerDelegate: class {
-//    func manager(manager: FirebaseManager, didGetData: AnyObject)
-//    
-//}
 
 class FirebaseManager {
-    
-//    weak var delegate: FirebaseManagerDelegate?
-    
     
     var firebaseName : String
     var firebaseMail : String
@@ -26,7 +18,7 @@ class FirebaseManager {
     var facebookUserID : String
     var facebookUserLink : String
     var facebookPhotoURL : String
-    
+    var token : String
     
     static let shared = FirebaseManager()
     
@@ -38,5 +30,6 @@ class FirebaseManager {
         facebookUserID = ""
         self.facebookUserLink = ""
         self.facebookPhotoURL = ""
+        self.token = ""
     }
 }

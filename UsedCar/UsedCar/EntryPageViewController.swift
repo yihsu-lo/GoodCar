@@ -16,31 +16,6 @@ import Firebase
 import Foundation
 import SystemConfiguration
 
-public class Reachability {
-    
-    class func isConnectedToNetwork() -> Bool {
-        
-        var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
-        zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
-        zeroAddress.sin_family = sa_family_t(AF_INET)
-        
-        let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
-            SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, UnsafePointer($0))
-        }
-        
-        var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
-        if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
-            return false
-        }
-        
-        let isReachable = flags == .Reachable
-        let needsConnection = flags == .ConnectionRequired
-        
-        return isReachable && !needsConnection
-        
-    }
-}
-
 
 
 class EntryPageViewController: UIViewController {
@@ -49,7 +24,7 @@ class EntryPageViewController: UIViewController {
     @IBOutlet weak var facebookLoginImageView: UIImageView!
     
     @IBOutlet weak var lamborghiniImageView: UIImageView!
-    
+        
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,102 +49,81 @@ class EntryPageViewController: UIViewController {
         
         if FBSDKAccessToken.currentAccessToken() != nil {
             
-            //            check Internet connection
+            /**************************************************/
+            /*************FIREBASE FACEBOOK THINGS*************/
+            /**************************************************/
             
-            if Reachability.isConnectedToNetwork() == true {
+            let credential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString)
+            
+            FIRAuth.auth()?.signInWithCredential(credential) { (user, error) in
                 
                 /**************************************************/
-                /*************FIREBASE FACEBOOK THINGS*************/
+                /******************SAVE TO MANAGER*****************/
                 /**************************************************/
                 
-                let credential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString)
+                if user != nil {
+                                        
+                    FirebaseManager.shared.firebaseName = (user?.displayName)!
+                    FirebaseManager.shared.firebaseMail = (user?.email)!
+                    FirebaseManager.shared.firebasePhotoURL = String(user?.photoURL)
+                    FirebaseManager.shared.firebaseUserID = (user?.uid)!
+                }
+            }
+            
+            /**************************************************/
+            /***************USER DEFAULT THINGS****************/
+            /**************************************************/
+            
+            let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "name, email, link, id"])
+            graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
                 
-                FIRAuth.auth()?.signInWithCredential(credential) { (user, error) in
+                if ((error) != nil) {
+                    print("Error: \(error)")
+                } else {
+                    
+                    let userName : NSString = result.valueForKey("name") as? NSString ?? NSString(string: "not getting user's name")
+                    
+                    let userEmail : NSString = result.valueForKey("email") as? NSString ?? NSString(string: "not getting user's email")
+                    
+                    let userLink : NSString = result.valueForKey("link") as? NSString ?? NSString(string: "not getting user's link")
+                    
+                    let userID : NSString = result.valueForKey("id") as? NSString ?? NSString(string: "not getting user's id")
+                    
+                    let facebookProfilePic = "http://graph.facebook.com/\(userID)/picture?type=large"
+                    
+                    /**************************************************/
+                    /*************FIREBASE FACEBOOK THINGS*************/
+                    /**************************************************/
                     
                     /**************************************************/
                     /******************SAVE TO MANAGER*****************/
                     /**************************************************/
                     
-                    if user != nil {
-                        
-                        FirebaseManager.shared.firebaseName = (user?.displayName)!
-                        FirebaseManager.shared.firebaseMail = (user?.email)!
-                        FirebaseManager.shared.firebasePhotoURL = String(user?.photoURL)
-                        FirebaseManager.shared.firebaseUserID = (user?.uid)!
-                    }
+                    FirebaseManager.shared.facebookUserID = userID as String
+                    FirebaseManager.shared.facebookUserLink = userLink as String
+                    FirebaseManager.shared.facebookPhotoURL = facebookProfilePic
+                    
+                    
+                    let defaults = NSUserDefaults.standardUserDefaults()
+                    defaults.setObject("\(userName)", forKey: "name")
+                    defaults.setObject("\(userEmail)", forKey: "email")
+                    defaults.setObject("\(userLink)", forKey: "link")
+                    defaults.setObject("\(facebookProfilePic)", forKey: "picture")
+                    
                 }
-                
-                /**************************************************/
-                /***************USER DEFAULT THINGS****************/
-                /**************************************************/
-                
-                let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "name, email, link, id"])
-                graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
-                    
-                    if ((error) != nil) {
-                        print("Error: \(error)")
-                    } else {
-                        
-                        let userName : NSString = result.valueForKey("name") as? NSString ?? NSString(string: "not getting user's name")
-                        
-                        let userEmail : NSString = result.valueForKey("email") as? NSString ?? NSString(string: "not getting user's email")
-                        
-                        let userLink : NSString = result.valueForKey("link") as? NSString ?? NSString(string: "not getting user's link")
-                        
-                        let userID : NSString = result.valueForKey("id") as? NSString ?? NSString(string: "not getting user's id")
-                        
-                        let facebookProfilePic = "http://graph.facebook.com/\(userID)/picture?type=large"
-                        
-                        /**************************************************/
-                        /*************FIREBASE FACEBOOK THINGS*************/
-                        /**************************************************/
-                        
-                        /**************************************************/
-                        /******************SAVE TO MANAGER*****************/
-                        /**************************************************/
-                        
-                        FirebaseManager.shared.facebookUserID = userID as String
-                        FirebaseManager.shared.facebookUserLink = userLink as String
-                        FirebaseManager.shared.facebookPhotoURL = facebookProfilePic
-                        
-                        
-                        let defaults = NSUserDefaults.standardUserDefaults()
-                        defaults.setObject("\(userName)", forKey: "name")
-                        defaults.setObject("\(userEmail)", forKey: "email")
-                        defaults.setObject("\(userLink)", forKey: "link")
-                        defaults.setObject("\(facebookProfilePic)", forKey: "picture")
-                        
-                    }
-                })
-                
-                //            let viewController = viewController() Wrong way! use storyBoard
-                
-                let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                
-                let initViewController = storyBoard.instantiateViewControllerWithIdentifier("MyTabBarController") as! MyTabBarController
-                
-                let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                
-                appDelegate.window?.rootViewController = initViewController
-                
-                
-                
-            } else {
-                
-                dispatch_async(dispatch_get_main_queue()) {
-                    
-                    let alertController = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: UIAlertControllerStyle.Alert)
-                    let goBackAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-                    }
-                    alertController.addAction(goBackAction)
-                    
-                    self.presentViewController(alertController, animated: true, completion: nil)
-                }
-            }
+            })
+            
+            //            let viewController = viewController() Wrong way! use storyBoard
+            
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            
+            let initViewController = storyBoard.instantiateViewControllerWithIdentifier("MyTabBarController") as! MyTabBarController
+            
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            
+            appDelegate.window?.rootViewController = initViewController
             
         }
-        
-        
     }
     
     
@@ -247,7 +201,7 @@ class EntryPageViewController: UIViewController {
                         }
                     })
                     
-
+                    
                     let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
                     
                     let initViewController = storyBoard.instantiateViewControllerWithIdentifier("MyTabBarController") as! MyTabBarController

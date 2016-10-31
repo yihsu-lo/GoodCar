@@ -22,6 +22,4 @@ class SearchTableViewCell: UITableViewCell {
     
     @IBOutlet weak var searchCellMileageLabel: UILabel!
 
-    @IBOutlet weak var searchCellDetailButton: UIButton!
-
 }

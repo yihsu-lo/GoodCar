@@ -29,12 +29,14 @@ class SearchTableViewController: UIViewController, UITableViewDataSource, UITabl
         
         searchTableView.hidden = true
         
+        searchTableView.tableFooterView = UIView(frame: .zero)
+        
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         
-        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(1.5), target: self, selector: #selector(checkData), userInfo: nil, repeats: false)
+        NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(2), target: self, selector: #selector(checkData), userInfo: nil, repeats: false)
     }
     
     
@@ -69,31 +71,29 @@ class SearchTableViewController: UIViewController, UITableViewDataSource, UITabl
         
         cell.searchCellImageView.layer.cornerRadius = 20
         cell.searchCellImageView.alpha = 0.8
-        
+        cell.searchCellImageView.clipsToBounds = true
         
         let item = firebaseSearchResultKey[indexPath.row]
         
         if firebaseSearchResultImageURLDictionary[item] != nil {
             
             cell.searchCellImageView.hnk_setImageFromURL(firebaseSearchResultImageURLDictionary[item]!)
-            
         }
         
-        
-        
-        cell.searchCellDetailButton.layer.borderColor = UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1).CGColor
-        
-        cell.searchCellDetailButton.layer.borderWidth = 1
-        
-        cell.searchCellDetailButton.layer.cornerRadius = 6
-        
-        cell.searchCellDetailButton.addTarget(self, action: #selector(viewDetail), forControlEvents: .TouchUpInside)
-        
-        cell.searchCellDetailButton.tag = indexPath.row
-        
-        
+
         return cell
     }
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let cellIdentifier = "SearchCell"
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier,forIndexPath: indexPath) as! SearchTableViewCell
+        
+        cell.searchCellImageView.image = UIImage(named: "transport-7")
+        
+    }
+    
+    
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
@@ -119,7 +119,7 @@ class SearchTableViewController: UIViewController, UITableViewDataSource, UITabl
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         let backToPrevious = UIBarButtonItem()
-        backToPrevious.title = "Back"
+        backToPrevious.title = ""
         navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         navigationItem.backBarButtonItem = backToPrevious
         
@@ -144,23 +144,6 @@ class SearchTableViewController: UIViewController, UITableViewDataSource, UITabl
     
     var singleSearchKey : String = ""
     var singleSearchImageURL : NSURL = NSURL()
-    
-    func viewDetail(sender: UIButton!) {
-        
-        singleSearchKey = firebaseSearchResultKey[sender.tag]
-        
-        if firebaseSearchResultImageURLDictionary[singleSearchKey] != nil {
-            
-            singleSearchImageURL = firebaseSearchResultImageURLDictionary[singleSearchKey]!
-        }
-        
-        singleSearchResult = [firebaseSearchResultValue[Int(sender.tag)]]
-
-
-        performSegueWithIdentifier("CellDetailSegue", sender: sender)
-        
-    }
-    
     
     /**************************************************/
     /***************LATE CHECKING THINGS***************/
