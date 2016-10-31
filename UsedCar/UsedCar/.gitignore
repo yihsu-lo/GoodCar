@@ -6,9 +6,11 @@
 build/
 DerivedData/
 
+
+ContactOwnerViewController.swift
 Info.plist
 GoogleService-Info.plist
-ContactOwnerViewController.swift
+
 
 ## Various settings
 *.pbxuser
