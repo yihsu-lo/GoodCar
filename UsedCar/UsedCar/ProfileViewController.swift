@@ -28,6 +28,7 @@ class ProfileViewController: UIViewController {
     
     @IBOutlet weak var profileLovedItemsButton: UIButton!
     
+    @IBOutlet weak var facebookLogoutButton: UIButton!
     
     
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -42,6 +43,19 @@ class ProfileViewController: UIViewController {
         likesFirebaseSearchInfo = []
         likesFirebaseLikesAutoID = []
         likesFirebaseSearchResultImageURLDictionary = [ : ]
+        
+        if FirebaseManager.shared.facebookUserID != "" {
+            
+            facebookLogoutButton.hidden = false
+            facebookLogoutButton.layer.cornerRadius = 10
+            facebookLogoutButton.backgroundColor = UIColor(red: 255/255, green: 116/255, blue: 70/255, alpha: 1)
+            facebookLogoutButton.tintColor = UIColor.whiteColor()
+            
+        } else {
+            
+            facebookLogoutButton.hidden = true
+        }
+        
     }
     
     override func viewDidLoad() {
@@ -95,7 +109,7 @@ class ProfileViewController: UIViewController {
         if let userNameText = defaults.objectForKey("name") as? String {
             profileNameLabel.text = userNameText
         } else {
-            profileNameLabel.text = "User name unknown"
+            profileNameLabel.text = "Guest"
         }
         
         let tapNameLabel = UITapGestureRecognizer(target: self, action: #selector(showFacebookPage))
@@ -149,6 +163,8 @@ class ProfileViewController: UIViewController {
         
     }
     
+    var alertManager : AlertManager = AlertManager()
+    
     /**************************************************/
     /*****************RETRIEVE DATABASE****************/
     /**************************************************/
@@ -165,23 +181,20 @@ class ProfileViewController: UIViewController {
                     
                     for item in [snapshot.value] {
                         
-                        guard let itemDictionary = item as? NSDictionary else {
-                            
-                            return
-                            //                            fatalError()
+                        guard
+                            let itemDictionary = item as? NSDictionary,
+                            let firebaseItemKey = itemDictionary.allKeys as? [String],
+                            let firebaseItemValue = itemDictionary.allValues as? [NSDictionary] else {
+                                
+                                self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                                
+                                return
                         }
                         
-                        guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
-                            return
-                            //                            fatalError()
-                        }
                         
                         self.mySellingFirebaseSearchResultKey = firebaseItemKey
                         
-                        guard let firebaseItemValue = itemDictionary.allValues as? [NSDictionary] else {
-                            return
-                            //                            fatalError()
-                        }
+                        
                         
                         for item in firebaseItemValue {
                             
@@ -198,8 +211,9 @@ class ProfileViewController: UIViewController {
                                 let userNameData = item["userName"] as? String,
                                 let facebookUserIDData = item["facebookUserID"] as? String else {
                                     
+                                    self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                                    
                                     return
-                                    //                                    fatalError()
                             }
                             
                             self.mySellingFirebaseSearchInfo.append(SearchDataViewController.FirebaseSearchResultData(brand: brandData, color: colorData, firebaseUserID: firebaseUserIDData, location: locationData, model: modelData, price: priceData, mileage: mileageData, year: yearData, time: timeData, userLink: userLinkData, userName: userNameData, facebookUserID: facebookUserIDData))
@@ -227,14 +241,8 @@ class ProfileViewController: UIViewController {
             
         } else {
             
-            let alertController = UIAlertController(title: "Warning", message: "User information is not available! Please try again!", preferredStyle: UIAlertControllerStyle.Alert)
-            let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-                
-            }
+            self.presentViewController(self.alertManager.alertUserInfoError(), animated: true, completion: nil)
             
-            alertController.addAction(goBackAction)
-            
-            self.presentViewController(alertController, animated: true, completion: nil)
         }
         
     }
@@ -258,6 +266,8 @@ class ProfileViewController: UIViewController {
                 if (error != nil) {
                     
                     print("retrieve storage image error in profile page: \(error)")
+                    
+                    self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
                     
                     return
                     
@@ -339,15 +349,12 @@ class ProfileViewController: UIViewController {
                     
                     for item in [snapshot.value] {
                         
-                        guard let itemDictionary = item as? NSDictionary else {
-                            
-                            return
-                            //                            fatalError()
-                        }
-                        
-                        guard let likesItemDictionary = itemDictionary.allValues as? [NSDictionary] else {
-                            return
-                            //                            fatalError()
+                        guard
+                            let itemDictionary = item as? NSDictionary,
+                            let likesItemDictionary = itemDictionary.allValues as? [NSDictionary] else {
+                                
+                                self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                                return
                         }
                         
                         for item in likesItemDictionary {
@@ -373,14 +380,8 @@ class ProfileViewController: UIViewController {
             
         } else {
             
-            let alertController = UIAlertController(title: "Warning", message: "User information is not available! Please try again!", preferredStyle: UIAlertControllerStyle.Alert)
-            let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-                
-            }
+            self.presentViewController(self.alertManager.alertUserInfoError(), animated: true, completion: nil)
             
-            alertController.addAction(goBackAction)
-            
-            self.presentViewController(alertController, animated: true, completion: nil)
         }
         
     }
@@ -407,8 +408,9 @@ class ProfileViewController: UIViewController {
                 
                 guard let firebaseItemValue = snapshot.value as? NSDictionary else {
                     
+                    self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                    
                     return
-                    //                    fatalError()
                 }
                 
                 guard let brandData = firebaseItemValue["brand"] as? String,
@@ -424,8 +426,9 @@ class ProfileViewController: UIViewController {
                     let userNameData = firebaseItemValue["userName"] as? String,
                     let facebookUserIDData = firebaseItemValue["facebookUserID"] as? String else {
                         
+                        self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                        
                         return
-                        //                        fatalError()
                 }
                 
                 self.likesFirebaseSearchInfo.append(SearchDataViewController.FirebaseSearchResultData(brand: brandData, color: colorData, firebaseUserID: firebaseUserIDData, location: locationData, model: modelData, price: priceData, mileage: mileageData, year: yearData, time: timeData, userLink: userLinkData, userName: userNameData, facebookUserID: facebookUserIDData))
@@ -462,6 +465,8 @@ class ProfileViewController: UIViewController {
                 if (error != nil) {
                     
                     print("retrieve storafy image error in profile page: \(error)")
+                    
+                    self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
                     
                     return
                     
@@ -524,9 +529,33 @@ class ProfileViewController: UIViewController {
             
             lovedItemsTableViewController = destViewController
         }
-        
     }
     
+    @IBAction func facebookLogoutButtonAction(sender: UIButton) {
+        
+        FBSDKLoginManager().logOut()
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.removeObjectForKey("name")
+        defaults.removeObjectForKey("email")
+        defaults.removeObjectForKey("link")
+        defaults.removeObjectForKey("picture")
+        
+        FirebaseManager.shared.firebaseName = ""
+        FirebaseManager.shared.firebaseMail = ""
+        FirebaseManager.shared.firebasePhotoURL = ""
+        FirebaseManager.shared.firebaseUserID = ""
+        FirebaseManager.shared.facebookUserID = ""
+        FirebaseManager.shared.facebookUserLink = ""
+        FirebaseManager.shared.facebookPhotoURL = ""
+        FirebaseManager.shared.token = ""
+        
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let initViewController = storyBoard.instantiateViewControllerWithIdentifier("EntryPageViewController") as! EntryPageViewController
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.window?.rootViewController = initViewController
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
     
     /**************************************************/
     /**************UNWIND SEGUE THINGS*****************/

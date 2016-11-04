@@ -44,6 +44,8 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
     
     var locationPickerDataSource: [String] = ["--Select--", "TAIPEI", "TAOYUAN", "TAICHUNG", "TAINAN", "KAOHSIUNG", "YILAN", "HSINCHU", "MIAOLI", "CHANGHUA", "NANTOU", "YUNLIN", "CHIAYI", "PINGTUNG", "TAITUNG", "HUALIEN", "KEELUNG"]
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -132,6 +134,10 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
         tapRecognizer.addTarget(self, action: #selector(didTapView))
         self.view.addGestureRecognizer(tapRecognizer)
         
+        if FirebaseManager.shared.facebookUserID == "" {
+            
+            presentViewController(self.alertManager.alertFBLoginError(), animated: true, completion: nil)            
+        }
     }
     
     func didTapView(){
@@ -159,7 +165,6 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         
-        
         if let croppedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             
             let imageData = UIImageJPEGRepresentation(croppedImage, 0.05)
@@ -169,12 +174,10 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
             pickImageView.image = pickedImageParameter
             
             pickImageView.clipsToBounds = true
-            
             uploadPhotoLabel.hidden = true
             uploadPhotoIcon.hidden = true
             
         }
-        
         dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -400,6 +403,8 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
     
     var uploadData : [String : AnyObject] = [ : ]
     
+    var alertManager : AlertManager = AlertManager()
+    
     
     @IBAction func saveButtonAction(sender: UIButton) {
         
@@ -432,7 +437,6 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
                 "firebaseUserID" : FirebaseManager.shared.firebaseUserID,
                 "facebookUserID" : FirebaseManager.shared.facebookUserID,
                 "searchInfo" : "\(brandTextField.text!.stringByReplacingOccurrencesOfString(" ", withString: ""))_\(colorTextField.text!.stringByReplacingOccurrencesOfString(" ", withString: ""))"
-                
             ]
             
             
@@ -443,31 +447,17 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
                 
             } else {
                 
-                let alertController = UIAlertController(title: "Warning", message: "User Information is not available! Please try again!", preferredStyle: UIAlertControllerStyle.Alert)
-                let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-                    
-                    self.spinner.stopAnimating()
-                }
-                
-                alertController.addAction(goBackAction)
-                
-                presentViewController(alertController, animated: true, completion: nil)
+                self.presentViewController(self.alertManager.alertUserInfoError(), animated: true, completion: nil)
+                self.spinner.stopAnimating()
                 
             }
             saveStorageImage()
             
-            
         } else {
             
-            let alertController = UIAlertController(title: "Warning", message: "All cells are mandatory!", preferredStyle: UIAlertControllerStyle.Alert)
-            let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-                
-                self.spinner.stopAnimating()
-            }
+            self.presentViewController(self.alertManager.alertCellInputError(), animated: true, completion: nil)
+            self.spinner.stopAnimating()
             
-            alertController.addAction(goBackAction)
-            
-            presentViewController(alertController, animated: true, completion: nil)
         }
         
     }
@@ -525,7 +515,6 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
                 /**************************************************/
                 /***************BACK TO MAIN PAGE******************/
                 /**************************************************/
-                
                 
                 dispatch_async(dispatch_get_main_queue()) {
                     

@@ -124,7 +124,6 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    
     /**************************************************/
     /***************LIMIT UPPERCASESTRING**************/
     /**************************************************/
@@ -167,9 +166,7 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
             self.userName = userName
             self.facebookUserID = facebookUserID
         }
-        
     }
-    
     
     /**************************************************/
     /****RETRIEVE DATA THINGS---DATABASE & STORAGE*****/
@@ -186,10 +183,9 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
     
     var firebaseSearchResultImageURLDictionary : [String : NSURL] = [ : ]
     
-    
     private var infoHandler: FIRDatabaseHandle!
-    
-    
+
+    var alertManager : AlertManager = AlertManager()
     
     @IBAction func searchButtonAction(sender: UIButton) {
         
@@ -199,7 +195,6 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
             /**************************************************/
             /**************RETRIEVE DATABASE DATA**************/
             /**************************************************/
-            
             
             infoHandler = ref.queryOrderedByChild("searchInfo").queryEqualToValue("\(brandTextField.text!)_\(colorTextField.text!)").observeEventType(.ChildAdded, withBlock: { snapshot in
                 
@@ -227,9 +222,9 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
                                 let userNameData = item!["userName"] as? String,
                                 let facebookUseIDData = item!["facebookUserID"] as? String else {
                                     
-                                    return
+                                self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
                                     
-                                    //                                    fatalError()
+                                    return
                             }
                             
                             self.firebaseSearchResultKey.append(snapshot.key)
@@ -252,7 +247,7 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
             
         } else {
             
-            cellsAreMandatoryAlert()
+            self.presentViewController(alertManager.alertCellInputError(), animated: true, completion: nil)
         }
         
         performSegueWithIdentifier("SearchDataTableSegue", sender: self)
@@ -277,6 +272,9 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
             imageRef.downloadURLWithCompletion { (URL, error) -> Void in
                 
                 if (error != nil) {
+                    
+                    
+                    self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
                     
                     print("retrieve storage image error in search page: \(error)")
                     
@@ -310,35 +308,6 @@ class SearchDataViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         }
-    }
-    
-    
-    /**************************************************/
-    /********************ALERT THING*******************/
-    /**************************************************/
-    
-    func searchNotMatchedAlert() {
-        
-        let alertController = UIAlertController(title: "Warning", message: "No search result matched!", preferredStyle: UIAlertControllerStyle.Alert)
-        let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-            
-        }
-        alertController.addAction(goBackAction)
-        
-        self.presentViewController(alertController, animated: true, completion: nil)
-    }
-    
-    
-    func cellsAreMandatoryAlert() {
-        
-        let alertController = UIAlertController(title: "Warning", message: "All cells are mandatory!", preferredStyle: UIAlertControllerStyle.Alert)
-        
-        let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-        }
-        
-        alertController.addAction(goBackAction)
-        
-        self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     /**************************************************/

@@ -79,6 +79,8 @@ class MessageViewController: UIViewController, UITableViewDataSource, UITableVie
     var messagesText : [String] = []
     var messagesTime : [String] = []
     
+    var alertManager : AlertManager = AlertManager()
+    
     func unique<S: SequenceType, E: Hashable where E==S.Generator.Element>(source: S) -> [E] {
         var seen: [E:Bool] = [:]
         return source.filter { seen.updateValue(true, forKey: $0) == nil }
@@ -95,14 +97,12 @@ class MessageViewController: UIViewController, UITableViewDataSource, UITableVie
                     
                     for item in [snapshot.value] {
                         
-                        guard let itemDictionary = item as? NSDictionary else {
-                            return
-                            //                            fatalError()
-                        }
-                        
-                        guard let firebaseItemValue = itemDictionary.allValues as? [NSDictionary] else {
-                            return
-                            //                            fatalError()
+                        guard
+                            let itemDictionary = item as? NSDictionary,
+                            let firebaseItemValue = itemDictionary.allValues as? [NSDictionary] else {
+                                
+                                self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                                return
                         }
                         
                         
@@ -110,8 +110,10 @@ class MessageViewController: UIViewController, UITableViewDataSource, UITableVie
                             
                             guard
                                 let carID = item["carID"] as? String else {
+                                    
+                                    self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                                    
                                     return
-                                    //                    fatalError()
                             }
                             
                             self.allCarID.append(carID)
@@ -124,16 +126,10 @@ class MessageViewController: UIViewController, UITableViewDataSource, UITableVie
             })
             
         } else {
-            let alertController = UIAlertController(title: "Warning", message: "User information is not available! Please try again!", preferredStyle: UIAlertControllerStyle.Alert)
-            let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-                
-                self.tabBarController?.selectedIndex = 0
-                
-            }
             
-            alertController.addAction(goBackAction)
+            self.presentViewController(self.alertManager.alertUserInfoError(), animated: true, completion: nil)
+            self.tabBarController?.selectedIndex = 0
             
-            self.presentViewController(alertController, animated: true, completion: nil)
         }
     }
     
@@ -150,15 +146,14 @@ class MessageViewController: UIViewController, UITableViewDataSource, UITableVie
                     
                     for item in [snapshot.value] {
                         
-                        guard let itemDictionary = item as? NSDictionary else {
-                            
-                            return
-                            //                            fatalError()
-                        }
-                        guard let firebaseItemValue = itemDictionary.allValues as? [NSDictionary] else {
-                            
-                            return
-                            //                            fatalError()
+                        guard
+                            let itemDictionary = item as? NSDictionary,
+                            let firebaseItemValue = itemDictionary.allValues as? [NSDictionary] else {
+                                
+                                self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                                
+                                return
+                                
                         }
                         
                         for item in firebaseItemValue {
@@ -167,8 +162,9 @@ class MessageViewController: UIViewController, UITableViewDataSource, UITableVie
                                 let updatedTextData = item["updatedText"] as? String,
                                 let updatedTimeData = item["updatedTime"] as? String else {
                                     
+                                    self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                                    
                                     return
-                                    //                                    fatalError()
                             }
                             
                             self.messagesText.append(updatedTextData)
@@ -186,16 +182,13 @@ class MessageViewController: UIViewController, UITableViewDataSource, UITableVie
                     
                     for item in [snapshot.value] {
                         
-                        guard let itemDictionary = item as? NSDictionary else {
-                            
-                            return
-                            //                            fatalError()
-                        }
-                        
-                        guard let firebaseItemValue = itemDictionary.allValues as? [NSDictionary] else {
-                            
-                            return
-                            //                                fatalError()
+                        guard
+                            let itemDictionary = item as? NSDictionary,
+                            let firebaseItemValue = itemDictionary.allValues as? [NSDictionary] else {
+                                
+                                self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                                return
+                                
                         }
                         
                         for item in firebaseItemValue {
@@ -213,8 +206,8 @@ class MessageViewController: UIViewController, UITableViewDataSource, UITableVie
                                 let userNameData = item["userName"] as? String,
                                 let facebookUserIDData = item["facebookUserID"] as? String else {
                                     
+                                    self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
                                     return
-                                    //                                    fatalError()
                             }
                             
                             self.carFirebaseSearchInfo.append(SearchDataViewController.FirebaseSearchResultData(brand: brandData, color: colorData, firebaseUserID: firebaseUserIDData, location: locationData, model: modelData, price: priceData, mileage: mileageData, year: yearData, time: timeData, userLink: userLinkData, userName: userNameData, facebookUserID: facebookUserIDData))
@@ -242,7 +235,11 @@ class MessageViewController: UIViewController, UITableViewDataSource, UITableVie
                 
                 if (error != nil) {
                     print("retrieve storage image error: \(error)")
+                    
+                    self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                    
                     return
+                    
                 } else {
                     
                     self.messageFirebaseSearchResultImageURLDictionary[item] = URL!

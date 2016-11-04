@@ -14,11 +14,9 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
     
     @IBOutlet weak var mySellingItemsTableView: UITableView!
     
-    
     var firebaseSearchResultKey : [String] = []
     var firebaseSearchResultValue : [SearchDataViewController.FirebaseSearchResultData] = []
     var firebaseSearchResultImageURLDictionary : [String : NSURL] = [ : ]
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -128,6 +126,9 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
     
     let lastRootRef = FIRDatabase.database().referenceWithPath("latestMessage")
     
+    
+    var alertManager : AlertManager = AlertManager()
+    
     func tableView(tablewView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
         
@@ -147,15 +148,15 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
             if snapshot.exists() {
                 
                 for item in [snapshot.value] {
-                    guard let itemDictionary = item as? NSDictionary else {
-                        
-                        return
-                        //                        fatalError()
-                    }
-                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
-                        
-                        return
-                        //                        fatalError()
+                    
+                    guard
+                        let itemDictionary = item as? NSDictionary,
+                        let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                            
+                            self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                            
+                            return
+                            
                     }
                     self.allMessageID = firebaseItemKey
                     
@@ -169,15 +170,15 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
             if snapshot.exists() {
                 
                 for item in [snapshot.value] {
-                    guard let itemDictionary = item as? NSDictionary else {
-                        
-                        return
-                        //                        fatalError()
-                    }
-                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
-                        
-                        return
-                        //                      fatalError()
+                    
+                    guard
+                        let itemDictionary = item as? NSDictionary,
+                        let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                            
+                            self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                            
+                            return
+                            
                     }
                     self.allLikesID = firebaseItemKey
                 }
@@ -189,15 +190,15 @@ class MySellingItemsTableViewController: UIViewController, UITableViewDataSource
             if snapshot.exists() {
                 
                 for item in [snapshot.value] {
-                    guard let itemDictionary = item as? NSDictionary else {
-                        
-                        return
-                        //                        fatalError()
-                    }
-                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
-                        
-                        return
-                        //                      fatalError()
+                    
+                    guard
+                        let itemDictionary = item as? NSDictionary,
+                        let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                            
+                            self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                            
+                            return
+                            
                     }
                     self.allTokenID = firebaseItemKey
                 }

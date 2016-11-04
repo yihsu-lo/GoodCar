@@ -8,7 +8,7 @@
         <!--Entry Page View Controller-->
         <scene sceneID="OlZ-Ns-fpR">
             <objects>
-                <viewController id="S2E-v6-r4f" customClass="EntryPageViewController" customModule="UsedCar" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EntryPageViewController" id="S2E-v6-r4f" customClass="EntryPageViewController" customModule="UsedCar" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="UeI-zL-2bo"/>
                         <viewControllerLayoutGuide type="bottom" id="oSW-hk-gx8"/>
@@ -41,6 +41,18 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TYW-O1-AGs">
+                                <rect key="frame" x="242" y="411" width="117" height="39"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="117" id="FKh-kR-yYs"/>
+                                    <constraint firstAttribute="height" constant="39" id="ufD-07-6MG"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
+                                <state key="normal" title="Guest"/>
+                                <connections>
+                                    <action selector="guestButtonAction:" destination="S2E-v6-r4f" eventType="touchUpInside" id="Zl5-M8-Gry"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -48,18 +60,21 @@
                             <constraint firstItem="fac-CN-GRL" firstAttribute="top" secondItem="UeI-zL-2bo" secondAttribute="bottom" constant="83" id="9J4-vw-TQg"/>
                             <constraint firstItem="oSW-hk-gx8" firstAttribute="top" secondItem="qx1-Yc-CEv" secondAttribute="bottom" constant="80" id="Fcx-4u-Hoh"/>
                             <constraint firstItem="qx1-Yc-CEv" firstAttribute="centerX" secondItem="8Ld-NP-xvo" secondAttribute="centerX" id="Sz5-I8-YzY"/>
+                            <constraint firstItem="qx1-Yc-CEv" firstAttribute="top" secondItem="TYW-O1-AGs" secondAttribute="bottom" constant="20" id="Y45-gk-DCN"/>
                             <constraint firstAttribute="bottomMargin" secondItem="8pt-at-ToN" secondAttribute="bottom" constant="-5" id="fNT-QR-Nly"/>
+                            <constraint firstItem="TYW-O1-AGs" firstAttribute="centerX" secondItem="qx1-Yc-CEv" secondAttribute="centerX" id="l4O-zl-pR0"/>
                             <constraint firstItem="8pt-at-ToN" firstAttribute="leading" secondItem="8Ld-NP-xvo" secondAttribute="leadingMargin" constant="-20" id="vpS-XM-5bt"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="facebookLoginImageView" destination="qx1-Yc-CEv" id="eY1-hN-8gH"/>
+                        <outlet property="guestButton" destination="TYW-O1-AGs" id="Gx4-Iw-tmc"/>
                         <outlet property="lamborghiniImageView" destination="8pt-at-ToN" id="tnb-IE-xaz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="psr-nd-nsV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2211" y="365"/>
+            <point key="canvasLocation" x="-2263" y="365"/>
         </scene>
         <!--Profile-->
         <scene sceneID="OfZ-6Z-oXf">
@@ -285,7 +300,7 @@
         <!--Good Car-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="UsedCar" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" id="BYZ-38-t0r" customClass="ViewController" customModule="UsedCar" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -651,7 +666,7 @@
         <!--Good Car-->
         <scene sceneID="bNL-1k-7KP">
             <objects>
-                <viewController id="ZVe-es-8e0" customClass="ProfileViewController" customModule="UsedCar" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfileViewController" id="ZVe-es-8e0" customClass="ProfileViewController" customModule="UsedCar" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="CAE-0q-Fd0"/>
                         <viewControllerLayoutGuide type="bottom" id="NxM-lu-mXO"/>
@@ -721,17 +736,32 @@
                                     <constraint firstAttribute="height" constant="170" id="u2z-kD-aRV"/>
                                 </constraints>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fnv-Yh-CjS">
+                                <rect key="frame" x="533" y="72" width="50" height="28"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="8xh-5g-6qx"/>
+                                    <constraint firstAttribute="height" constant="28" id="fEE-fy-okG"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                <state key="normal" title="Logout"/>
+                                <connections>
+                                    <action selector="facebookLogoutButtonAction:" destination="ZVe-es-8e0" eventType="touchUpInside" id="CHN-BJ-Eoy"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="uYV-yi-y4o" firstAttribute="top" secondItem="CAE-0q-Fd0" secondAttribute="bottom" constant="60" id="54S-8l-vZN"/>
                             <constraint firstItem="uYV-yi-y4o" firstAttribute="centerX" secondItem="uD6-df-i28" secondAttribute="centerX" id="9qu-jg-2yS"/>
                             <constraint firstItem="ooz-NG-moL" firstAttribute="centerX" secondItem="uD6-df-i28" secondAttribute="centerX" id="Muu-nW-3cU"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Fnv-Yh-CjS" secondAttribute="trailing" constant="-3" id="WTb-N4-3X3"/>
                             <constraint firstItem="NxM-lu-mXO" firstAttribute="top" secondItem="ooz-NG-moL" secondAttribute="bottom" constant="30" id="dEn-FD-hZl"/>
+                            <constraint firstItem="Fnv-Yh-CjS" firstAttribute="top" secondItem="CAE-0q-Fd0" secondAttribute="bottom" constant="8" id="paa-Wy-Mu1"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Good Car" id="syK-ZI-vzj"/>
                     <connections>
+                        <outlet property="facebookLogoutButton" destination="Fnv-Yh-CjS" id="wDZ-W8-2mq"/>
                         <outlet property="imageBackgroundView" destination="uYV-yi-y4o" id="MwE-v7-HJH"/>
                         <outlet property="profileImageView" destination="mLo-UX-Xck" id="lF9-dR-e8x"/>
                         <outlet property="profileLovedItemsButton" destination="T7f-zh-E05" id="jiy-zB-KbG"/>
@@ -1471,7 +1501,7 @@
         <!--Search Detail View Controller-->
         <scene sceneID="RSB-ge-pwz">
             <objects>
-                <viewController id="v8K-Nd-D6r" customClass="SearchDetailViewController" customModule="UsedCar" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchDetailViewController" id="v8K-Nd-D6r" customClass="SearchDetailViewController" customModule="UsedCar" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="w29-1C-pnR"/>
                         <viewControllerLayoutGuide type="bottom" id="aPB-YO-gpZ"/>

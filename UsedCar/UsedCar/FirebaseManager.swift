@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 class FirebaseManager {
     
     var firebaseName : String
@@ -27,7 +26,7 @@ class FirebaseManager {
         self.firebaseMail = ""
         self.firebasePhotoURL = ""
         self.firebaseUserID = ""
-        facebookUserID = ""
+        self.facebookUserID = ""
         self.facebookUserLink = ""
         self.facebookPhotoURL = ""
         self.token = ""

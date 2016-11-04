@@ -14,6 +14,7 @@
 		4D3167A21DA772F2001C7C1C /* LovedItemsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3167A11DA772F2001C7C1C /* LovedItemsTableViewCell.swift */; };
 		4D3479501DA2212B00BCEDB6 /* MySellingItemsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D34794F1DA2212B00BCEDB6 /* MySellingItemsDetailViewController.swift */; };
 		4D3479521DA22EDB00BCEDB6 /* MySellingItemsEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3479511DA22EDB00BCEDB6 /* MySellingItemsEditViewController.swift */; };
+		4D35168F1DC85D4A00951D8C /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D35168E1DC85D4A00951D8C /* AlertManager.swift */; };
 		4D51DC991D9E5B0F004F480C /* SearchDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D51DC981D9E5B0F004F480C /* SearchDetailViewController.swift */; };
 		4D6CF1AB1D93AE5E00768CF0 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6CF1A71D93AE5E00768CF0 /* Bolts.framework */; };
 		4D6CF1AC1D93AE5E00768CF0 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6CF1A81D93AE5E00768CF0 /* FBSDKCoreKit.framework */; };
@@ -27,7 +28,6 @@
 		4D6E18371DACEF530091E916 /* ContactOwnerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6E18361DACEF530091E916 /* ContactOwnerTableViewCell.swift */; };
 		4DB43D561D98F06E00F334D4 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB43D551D98F06E00F334D4 /* FirebaseManager.swift */; };
 		4DC77D1E1DBCA51000B75C97 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4DC77D1D1DBCA51000B75C97 /* GoogleService-Info.plist */; };
-		4DD67BB21DBDAD5700C26A1F /* NewMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD67BB11DBDAD5700C26A1F /* NewMessageTableViewCell.swift */; };
 		4DE579A51DAB9EED00B680BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4DE579A41DAB9EED00B680BB /* LaunchScreen.storyboard */; };
 		4DE830671D9E02DB00651EE4 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE830661D9E02DB00651EE4 /* SearchTableViewCell.swift */; };
 		4DEAE82D1DA207E100215D80 /* MySellingItemsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEAE82C1DA207E100215D80 /* MySellingItemsTableViewController.swift */; };
@@ -51,6 +51,7 @@
 		4D3167A11DA772F2001C7C1C /* LovedItemsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LovedItemsTableViewCell.swift; sourceTree = "<group>"; };
 		4D34794F1DA2212B00BCEDB6 /* MySellingItemsDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MySellingItemsDetailViewController.swift; sourceTree = "<group>"; };
 		4D3479511DA22EDB00BCEDB6 /* MySellingItemsEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MySellingItemsEditViewController.swift; sourceTree = "<group>"; };
+		4D35168E1DC85D4A00951D8C /* AlertManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		4D51DC981D9E5B0F004F480C /* SearchDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchDetailViewController.swift; sourceTree = "<group>"; };
 		4D6CF1A71D93AE5E00768CF0 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/UsedCar-aaqoggsuzbzrrueeopjkqwuugycj/Build/Products/Debug-iphonesimulator/Bolts/Bolts.framework"; sourceTree = "<group>"; };
 		4D6CF1A81D93AE5E00768CF0 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/UsedCar-aaqoggsuzbzrrueeopjkqwuugycj/Build/Products/Debug-iphonesimulator/FBSDKCoreKit/FBSDKCoreKit.framework"; sourceTree = "<group>"; };
@@ -64,7 +65,6 @@
 		4D6E18361DACEF530091E916 /* ContactOwnerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ContactOwnerTableViewCell.swift; path = ../ContactOwnerTableViewCell.swift; sourceTree = "<group>"; };
 		4DB43D551D98F06E00F334D4 /* FirebaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		4DC77D1D1DBCA51000B75C97 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		4DD67BB11DBDAD5700C26A1F /* NewMessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageTableViewCell.swift; sourceTree = "<group>"; };
 		4DE579A41DAB9EED00B680BB /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4DE830661D9E02DB00651EE4 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		4DEAE82C1DA207E100215D80 /* MySellingItemsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MySellingItemsTableViewController.swift; sourceTree = "<group>"; };
@@ -134,7 +134,6 @@
 			isa = PBXGroup;
 			children = (
 				4D30469F1DBDD38600C0D98A /* MessageTableViewCell.swift */,
-				4DD67BB11DBDAD5700C26A1F /* NewMessageTableViewCell.swift */,
 				4D6E18341DACEF2B0091E916 /* ContactUserTableViewCell.swift */,
 				4D6E18361DACEF530091E916 /* ContactOwnerTableViewCell.swift */,
 				4D3167A11DA772F2001C7C1C /* LovedItemsTableViewCell.swift */,
@@ -176,6 +175,7 @@
 			children = (
 				4D6CF1B31D93BB7800768CF0 /* MyTabBarController.swift */,
 				4DB43D551D98F06E00F334D4 /* FirebaseManager.swift */,
+				4D35168E1DC85D4A00951D8C /* AlertManager.swift */,
 				4DECF6311D93AD2E00190CCB /* Main.storyboard */,
 				4DE579A41DAB9EED00B680BB /* LaunchScreen.storyboard */,
 			);
@@ -390,6 +390,7 @@
 				4D3046A01DBDD38600C0D98A /* MessageTableViewCell.swift in Sources */,
 				4D6E18371DACEF530091E916 /* ContactOwnerTableViewCell.swift in Sources */,
 				4D6CF1B21D93B35A00768CF0 /* EntryPageViewController.swift in Sources */,
+				4D35168F1DC85D4A00951D8C /* AlertManager.swift in Sources */,
 				4D30469D1DBDCF2E00C0D98A /* MessageViewController.swift in Sources */,
 				4D6E182E1DACDAC30091E916 /* ContactOwnerViewController.swift in Sources */,
 				4D3167A21DA772F2001C7C1C /* LovedItemsTableViewCell.swift in Sources */,
@@ -401,7 +402,6 @@
 				4DEC538A1D9ACD120005EDD8 /* ProfileViewController.swift in Sources */,
 				4DEC538C1D9ACEB10005EDD8 /* SearchTableViewController.swift in Sources */,
 				4DF0E7B81D94FD960009CFD9 /* SearchDataViewController.swift in Sources */,
-				4DD67BB21DBDAD5700C26A1F /* NewMessageTableViewCell.swift in Sources */,
 				4D3479521DA22EDB00BCEDB6 /* MySellingItemsEditViewController.swift in Sources */,
 				4D51DC991D9E5B0F004F480C /* SearchDetailViewController.swift in Sources */,
 				4D6CF1B41D93BB7800768CF0 /* MyTabBarController.swift in Sources */,

@@ -149,19 +149,20 @@ class SearchTableViewController: UIViewController, UITableViewDataSource, UITabl
     /***************LATE CHECKING THINGS***************/
     /**************************************************/
     
+    
     func checkData() {
         
         if firebaseSearchResultKey.count == 0 {
-            
+
             let alertController = UIAlertController(title: "Warning", message: "No search result matched!", preferredStyle: UIAlertControllerStyle.Alert)
             let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
                 
                 self.performSegueWithIdentifier("UnwindToSearchPageFromSearchTable", sender: self)
-                
             }
             alertController.addAction(goBackAction)
             
             self.presentViewController(alertController, animated: true, completion: nil)
+            
         }
     }
     

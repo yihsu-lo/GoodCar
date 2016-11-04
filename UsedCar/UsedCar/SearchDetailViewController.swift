@@ -46,6 +46,8 @@ class SearchDetailViewController: UIViewController {
     var singleSearchResult : [SearchDataViewController.FirebaseSearchResultData] = []
     var singleSearchImageURL : NSURL = NSURL()
     
+    var alertManager : AlertManager = AlertManager()
+    
     let likesRootRef = FIRDatabase.database().referenceWithPath("likes")
     
     override func viewDidLoad() {
@@ -128,16 +130,13 @@ class SearchDetailViewController: UIViewController {
                 
                 if snapshot.exists() {
                     
-                    guard let itemDictionary = snapshot.value as? NSDictionary else {
-                        
-                        return
-                        //                        fatalError()
-                    }
-                    
-                    guard let likesDataKey = itemDictionary.allKeys as? [String] else {
-                        
-                        return
-                        //                        fatalError()
+                    guard
+                        let itemDictionary = snapshot.value as? NSDictionary,
+                        let likesDataKey = itemDictionary.allKeys as? [String] else {
+                            
+                            self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                            
+                            return
                     }
                     
                     for item in likesDataKey {
@@ -283,9 +282,27 @@ class SearchDetailViewController: UIViewController {
     
     func contactOwenerAction() {
         
-        performSegueWithIdentifier("ContactOwnerActionSegue", sender: [])
+        if FirebaseManager.shared.facebookUserID != "" {
+            
+            performSegueWithIdentifier("ContactOwnerActionSegue", sender: [])
+            
+        } else {
+            
+            presentViewController(self.alertManager.alertFBLoginError(), animated: true, completion: nil)
+            
+            NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(5), target: self, selector: #selector(goBackToEntryPage), userInfo: nil, repeats: false)
+        }
     }
     
+    
+    func goBackToEntryPage() {
+        
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let initViewController = storyBoard.instantiateViewControllerWithIdentifier("EntryPageViewController") as! EntryPageViewController
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.window?.rootViewController = initViewController
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
     
     
     /**************************************************/

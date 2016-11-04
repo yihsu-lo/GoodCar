@@ -50,7 +50,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
-        
         Fabric.with([Crashlytics()])
         
         // TODO: Move this to where you establish a user session

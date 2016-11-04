@@ -17,7 +17,6 @@ import Foundation
 import SystemConfiguration
 
 
-
 class EntryPageViewController: UIViewController {
     
     
@@ -25,12 +24,12 @@ class EntryPageViewController: UIViewController {
     
     @IBOutlet weak var lamborghiniImageView: UIImageView!
         
+    @IBOutlet weak var guestButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         lamborghiniImageView.alpha = 0.5
-        
         
         let color1 = UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
         let color2 = UIColor(red: 80/255, green: 80/255, blue: 80/255, alpha: 1)
@@ -42,16 +41,17 @@ class EntryPageViewController: UIViewController {
         self.view.layer.insertSublayer(gradient, atIndex: 0)
         
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(loginAction))
-        facebookLoginImageView.addGestureRecognizer(tap)
+        guestButton.backgroundColor = UIColor(red: 30/255, green: 130/255, blue: 150/255, alpha: 1)
+        guestButton.layer.cornerRadius = 18
+        guestButton.tintColor = UIColor.whiteColor()
+        
+        
+        let tapFBLogin = UITapGestureRecognizer(target: self, action: #selector(loginAction))
+        facebookLoginImageView.addGestureRecognizer(tapFBLogin)
         facebookLoginImageView.userInteractionEnabled = true
         
         
         if FBSDKAccessToken.currentAccessToken() != nil {
-            
-            /**************************************************/
-            /*************FIREBASE FACEBOOK THINGS*************/
-            /**************************************************/
             
             let credential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString)
             
@@ -62,7 +62,7 @@ class EntryPageViewController: UIViewController {
                 /**************************************************/
                 
                 if user != nil {
-                                        
+                
                     FirebaseManager.shared.firebaseName = (user?.displayName)!
                     FirebaseManager.shared.firebaseMail = (user?.email)!
                     FirebaseManager.shared.firebasePhotoURL = String(user?.photoURL)
@@ -92,17 +92,12 @@ class EntryPageViewController: UIViewController {
                     let facebookProfilePic = "http://graph.facebook.com/\(userID)/picture?type=large"
                     
                     /**************************************************/
-                    /*************FIREBASE FACEBOOK THINGS*************/
-                    /**************************************************/
-                    
-                    /**************************************************/
                     /******************SAVE TO MANAGER*****************/
                     /**************************************************/
                     
                     FirebaseManager.shared.facebookUserID = userID as String
                     FirebaseManager.shared.facebookUserLink = userLink as String
                     FirebaseManager.shared.facebookPhotoURL = facebookProfilePic
-                    
                     
                     let defaults = NSUserDefaults.standardUserDefaults()
                     defaults.setObject("\(userName)", forKey: "name")
@@ -176,21 +171,22 @@ class EntryPageViewController: UIViewController {
                             print("Error: \(error)")
                         } else {
                             
-                            let userName : NSString = result.valueForKey("name") as? NSString ?? NSString(string: "not getting user's name")
-                            
-                            let userEmail : NSString = result.valueForKey("email") as? NSString ?? NSString(string: "not getting user's email")
-                            
-                            let userLink : NSString = result.valueForKey("link") as? NSString ?? NSString(string: "not getting user's link")
                             
                             /**************************************************/
                             /*************FIREBASE FACEBOOK THINGS*************/
                             /**************************************************/
                             
-                            FirebaseManager.shared.facebookUserLink = userLink as String
-                            
-                            
+                            let userName : NSString = result.valueForKey("name") as? NSString ?? NSString(string: "not getting user's name")
+                            let userEmail : NSString = result.valueForKey("email") as? NSString ?? NSString(string: "not getting user's email")
+                            let userLink : NSString = result.valueForKey("link") as? NSString ?? NSString(string: "not getting user's link")
+
                             let userID : NSString = result.valueForKey("id") as? NSString ?? NSString(string: "not getting user's id")
                             let facebookProfilePic = "http://graph.facebook.com/\(userID)/picture?type=large"
+                            
+                            FirebaseManager.shared.facebookUserLink = userLink as String
+                            FirebaseManager.shared.facebookUserID = userID as String
+                            FirebaseManager.shared.facebookPhotoURL = facebookProfilePic
+
                             
                             let defaults = NSUserDefaults.standardUserDefaults()
                             defaults.setObject("\(userName)", forKey: "name")
@@ -200,7 +196,6 @@ class EntryPageViewController: UIViewController {
                             
                         }
                     })
-                    
                     
                     let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
                     
@@ -214,6 +209,21 @@ class EntryPageViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    
+    @IBAction func guestButtonAction(sender: UIButton) {
+        
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let initViewController = storyBoard.instantiateViewControllerWithIdentifier("MyTabBarController") as! MyTabBarController
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        appDelegate.window?.rootViewController = initViewController
+        
+        self.dismissViewControllerAnimated(true, completion: nil)
+        
     }
     
     

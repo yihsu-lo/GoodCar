@@ -386,15 +386,11 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
             
         } else {
             
-            let alertController = UIAlertController(title: "Warning", message: "All cells are mandatory!", preferredStyle: UIAlertControllerStyle.Alert)
-            let goBackAction = UIAlertAction(title: "Go back", style: UIAlertActionStyle.Destructive) { (result : UIAlertAction) -> Void in
-                
-                self.spinner.stopAnimating()
-            }
             
-            alertController.addAction(goBackAction)
+            self.presentViewController(self.alertManager.alertCellInputError(), animated: true, completion: nil)
             
-            presentViewController(alertController, animated: true, completion: nil)
+            self.spinner.stopAnimating()
+            
         }
     }
     
@@ -405,6 +401,8 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
     
     
     let storageRef = FIRStorage.storage().referenceForURL("gs://goodcar-47440.appspot.com/")
+    
+    var alertManager : AlertManager = AlertManager()
     
     func updateStorageImage() {
         
@@ -460,23 +458,13 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
                 self.storageRef.child(self.singleSearchKey).putData(imageData, metadata: metadata) { (metadata, error) in
                     if let error = error {
                         
-                        let alertController = UIAlertController(title: "Warning", message: "Connection error. Please try again!", preferredStyle: .Alert)
-                        
-                        let goBackAction = UIAlertAction(title: "Go back", style: .Destructive) {
-                            (result : UIAlertAction) -> Void in
-                        }
-                        
-                        alertController.addAction(goBackAction)
-                        
-                        self.presentViewController(alertController, animated: true, completion: nil)
+                        self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
                         
                         print("Error uploading: \(error)")
                         
                         return
                         
                     } else {
-                        
-                        print("Update data success")
                         
                         /**************************************************/
                         /**************BACK TO PROFILE PAGE****************/
@@ -525,15 +513,14 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
             if snapshot.exists() {
                 
                 for item in [snapshot.value] {
-                    guard let itemDictionary = item as? NSDictionary else {
-                        
-                        return
-//                        fatalError()
-                    }
-                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
-                        
-                        return
-//                        fatalError()
+                    
+                    guard
+                        let itemDictionary = item as? NSDictionary,
+                        let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                            
+                            self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                            
+                            return
                     }
                     self.allMessageID = firebaseItemKey
                 }
@@ -542,18 +529,18 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
         })
         
         likesHandler = likesRootRef.queryOrderedByChild("dataID").queryEqualToValue(singleSearchKey).observeEventType(.Value, withBlock: { snapshot in
-         
+            
             if snapshot.exists() {
+                
                 for item in [snapshot.value] {
-                    guard let itemDictionary = item as? NSDictionary else {
-                        
-                        return
-//                        fatalError()
-                    }
-                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
-                        
-                        return
-//                         fatalError()
+                    
+                    guard
+                        let itemDictionary = item as? NSDictionary,
+                        let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                            
+                            self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                            
+                            return
                     }
                     self.allLikesID = firebaseItemKey
                 }
@@ -564,15 +551,14 @@ class MySellingItemsEditViewController: UIViewController, UIImagePickerControlle
             
             if snapshot.exists() {
                 for item in [snapshot.value] {
-                    guard let itemDictionary = item as? NSDictionary else {
-                        
-                        return
-                        //                        fatalError()
-                    }
-                    guard let firebaseItemKey = itemDictionary.allKeys as? [String] else {
-                        
-                        return
-                        //                         fatalError()
+                    guard
+                        let itemDictionary = item as? NSDictionary,
+                        let firebaseItemKey = itemDictionary.allKeys as? [String] else {
+                            
+                            self.presentViewController(self.alertManager.alertConnectionError(), animated: true, completion: nil)
+                            
+                            return
+                            
                     }
                     self.allTokenID = firebaseItemKey
                 }
