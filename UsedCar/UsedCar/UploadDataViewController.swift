@@ -96,23 +96,22 @@ class UploadDataViewController: UIViewController, UIImagePickerControllerDelegat
             yearPickerDataSourceString.append(String(yearPickerDataSourceInt[yearPickerDataItem]))
         }
         
-        
-        let imageBackgroundColor1 = UIColor(red: 255/255, green: 58/255, blue: 70/255, alpha: 1)
-        
+//        green 58
+        let imageBackgroundColor1 = UIColor(red: 255/255, green: 20/255, blue: 70/255, alpha: 1)
         let imageBackgroundColor2 = UIColor(red: 255/255, green: 116/255, blue: 70/255, alpha: 1)
-        
         let imageBackgroundGradient = CAGradientLayer()
-        
-        imageBackgroundGradient.frame.size = pickImageBackgroundView.frame.size
-        
         
         imageBackgroundGradient.startPoint = CGPoint(x: 0.0, y: 1.0)
         imageBackgroundGradient.endPoint = CGPoint(x: 0.0, y: 0.0)
         imageBackgroundGradient.locations = [0.0, 1.0]
-        
         imageBackgroundGradient.colors = [imageBackgroundColor1.CGColor, imageBackgroundColor2.CGColor]
         
-        self.pickImageBackgroundView.layer.insertSublayer(imageBackgroundGradient, atIndex: 0)
+//        imageBackgroundGradient.frame = pickImageBackgroundView.bounds
+        imageBackgroundGradient.frame = CGRectMake(0.0, 0.0, 500, 360)
+        
+        pickImageBackgroundView.clipsToBounds = true
+        
+        pickImageBackgroundView.layer.insertSublayer(imageBackgroundGradient, atIndex: 0)
         
         uploadPhotoIcon.userInteractionEnabled = false
         uploadPhotoLabel.userInteractionEnabled = false

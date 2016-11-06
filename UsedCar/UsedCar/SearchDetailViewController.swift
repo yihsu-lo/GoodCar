@@ -11,6 +11,9 @@ import Haneke
 import SafariServices
 import Firebase
 import FirebaseAnalytics
+import FBSDKCoreKit
+import FBSDKLoginKit
+import FBSDKShareKit
 
 
 class SearchDetailViewController: UIViewController {
@@ -289,7 +292,6 @@ class SearchDetailViewController: UIViewController {
         } else {
             
             presentViewController(self.alertManager.alertFBLoginError(), animated: true, completion: nil)
-            
             NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(5), target: self, selector: #selector(goBackToEntryPage), userInfo: nil, repeats: false)
         }
     }
@@ -311,19 +313,35 @@ class SearchDetailViewController: UIViewController {
     
     @IBAction func contactFacebookAction(sender: UIButton) {
         
-        let FBLink = "https://www.facebook.com/app_scoped_user_id/\(singleSearchResult[0].facebookUserID)"
+        //        let FBLink = "https://www.facebook.com/app_scoped_user_id/\(singleSearchResult[0].facebookUserID)"
+        //
+        //        let FBURL = NSURL(string: FBLink)!
+        //
+        //        if UIApplication.sharedApplication().canOpenURL(FBURL) {
+        //
+        //            UIApplication.sharedApplication().openURL(FBURL)
+        //
+        //        } else {
+        //
+        //            let safariVC = SFSafariViewController(URL: FBURL)
+        //
+        //            presentViewController(safariVC, animated: true, completion: nil)
+        //        }
         
-        let FBURL = NSURL(string: FBLink)!
         
-        if UIApplication.sharedApplication().canOpenURL(FBURL) {
+        if FirebaseManager.shared.facebookUserID != "" {
             
-            UIApplication.sharedApplication().openURL(FBURL)
+            let content: FBSDKShareLinkContent = FBSDKShareLinkContent()
+            content.contentURL = singleSearchImageURL
+            content.contentTitle = "Good Car Found!"
+            content.contentDescription = "\(singleSearchResult[0].brand) \(singleSearchResult[0].color) \(singleSearchResult[0].price)"
+            content.imageURL = singleSearchImageURL
+            FBSDKShareDialog.showFromViewController(self, withContent: content, delegate: nil)
             
         } else {
             
-            let safariVC = SFSafariViewController(URL: FBURL)
-            
-            presentViewController(safariVC, animated: true, completion: nil)
+            presentViewController(self.alertManager.alertFBLoginError(), animated: true, completion: nil)
+            NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(5), target: self, selector: #selector(goBackToEntryPage), userInfo: nil, repeats: false)
         }
         
     }
