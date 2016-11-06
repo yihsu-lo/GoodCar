@@ -44,6 +44,7 @@ class SearchDetailViewController: UIViewController {
     
     @IBOutlet weak var contactFacebookButton: UIButton!
     
+    @IBOutlet weak var shareFacebookButton: UIButton!
     
     var singleSearchKey : String = ""
     var singleSearchResult : [SearchDataViewController.FirebaseSearchResultData] = []
@@ -105,7 +106,8 @@ class SearchDetailViewController: UIViewController {
         
         contactFacebookButton.backgroundColor = UIColor(red: 59/255, green: 95/255, blue: 158/255, alpha: 0.8)
         contactFacebookButton.layer.cornerRadius = 10
-        
+        shareFacebookButton.backgroundColor = UIColor(red: 59/255, green: 95/255, blue: 158/255, alpha: 0.8)
+        shareFacebookButton.layer.cornerRadius = 10
         
         detailImageView.hnk_setImageFromURL(singleSearchImageURL)
         
@@ -313,21 +315,28 @@ class SearchDetailViewController: UIViewController {
     
     @IBAction func contactFacebookAction(sender: UIButton) {
         
-        //        let FBLink = "https://www.facebook.com/app_scoped_user_id/\(singleSearchResult[0].facebookUserID)"
-        //
-        //        let FBURL = NSURL(string: FBLink)!
-        //
-        //        if UIApplication.sharedApplication().canOpenURL(FBURL) {
-        //
-        //            UIApplication.sharedApplication().openURL(FBURL)
-        //
-        //        } else {
-        //
-        //            let safariVC = SFSafariViewController(URL: FBURL)
-        //
-        //            presentViewController(safariVC, animated: true, completion: nil)
-        //        }
+        let FBLink = "https://www.facebook.com/app_scoped_user_id/\(singleSearchResult[0].facebookUserID)"
         
+        let FBURL = NSURL(string: FBLink)!
+        
+        if UIApplication.sharedApplication().canOpenURL(FBURL) {
+            
+            UIApplication.sharedApplication().openURL(FBURL)
+            
+        } else {
+            
+            let safariVC = SFSafariViewController(URL: FBURL)
+            
+            presentViewController(safariVC, animated: true, completion: nil)
+        }
+        
+    }
+    
+    /**************************************************/
+    /***************SHARE FACEBOOK ACTION**************/
+    /**************************************************/
+    
+    @IBAction func shareFacebookAction(sender: UIButton) {
         
         if FirebaseManager.shared.facebookUserID != "" {
             
@@ -345,6 +354,7 @@ class SearchDetailViewController: UIViewController {
         }
         
     }
+    
     
     /**************************************************/
     /******************SEGUE THINGS********************/
